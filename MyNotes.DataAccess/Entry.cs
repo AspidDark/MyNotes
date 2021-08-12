@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MyNotes.DataAccess.Services;
+using MyNotes.Domain.Contracts.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,8 @@ namespace MyNotes.DataAccess
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
                     x => x.MigrationsAssembly("MyNotes.DataAccess"));
             });
+
+            services.AddScoped<ITopicService, TempService>();
             return services;
         }
     }

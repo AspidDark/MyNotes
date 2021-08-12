@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MyNotes.Domain.Contracts.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,15 +18,18 @@ namespace MyNotes.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ITopicService _topicService;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, ITopicService topicService)
         {
+            _topicService = topicService;
             _logger = logger;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IEnumerable<WeatherForecast>> Get()
         {
+            var result =  await _topicService.Get(Guid.NewGuid());
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
