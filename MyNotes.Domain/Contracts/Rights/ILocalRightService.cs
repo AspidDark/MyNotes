@@ -18,11 +18,11 @@ namespace MyNotes.Domain.Contracts.Rights
 
         Task<LocalRight> AddRight(Guid ownerId, Guid userId, EntityType entityType, Guid entityId);
 
-        Task<bool> Add(LocalRight right);
+        Task<bool> Add(LocalRight entity);
 
         Task<LocalRight> Remove(Guid id);
 
-        Task<LocalRight> Update(LocalRight right);
+        Task<LocalRight> Update(LocalRight entity);
 
         Task<bool> RemoveAllByUser(Guid userID);
     }

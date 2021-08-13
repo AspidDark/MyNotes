@@ -5,7 +5,6 @@ using MyNotes.Domain.Entities.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MyNotes.DataAccess.Services.Core
@@ -25,10 +24,14 @@ namespace MyNotes.DataAccess.Services.Core
         public async Task<Topic> Get(Guid id)
             => _appDbContext.Topics.AsNoTracking().FirstOrDefault(x => x.Id == id);
 
-
         public async Task<List<Topic>> GetList(Guid ownerId, int take, int skip)
         {
-            var result = _appDbContext.Topics.Where(x => x.OwnerId == ownerId).Skip(skip).Take(take).AsNoTracking().ToList();
+            var result = _appDbContext.Topics.Where(x => x.OwnerId == ownerId)
+                .OrderBy(x=>x.EditDate)
+                .Skip(skip)
+                .Take(take)
+                .AsNoTracking()
+                .ToList();
             return result;
         }
 

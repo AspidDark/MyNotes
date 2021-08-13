@@ -6,13 +6,13 @@ namespace MyNotes.DataAccess.Mapper.Core
 {
     public class FileEntityMap : BaseEntityMap<FileEntity>
     {
-        public FileEntityMap() : base("fileEntity_map") { }
+        public FileEntityMap() : base("file_entity") { }
 
         public override void Configure(EntityTypeBuilder<FileEntity> builder)
         {
             base.Configure(builder);
-            builder.Property(x => x.NoteId).HasColumnName("note_id").IsRequired();
-            builder.HasOne<Note>(c => c.Note).WithMany().HasForeignKey(x => x.NoteId);
+            builder.Property(x => x.ParagraphId).HasColumnName("paragraph_id").IsRequired();
+            builder.HasOne<Paragraph>(c => c.Paragraph).WithMany().HasForeignKey(x => x.ParagraphId);
             builder.Property(x => x.Path).HasColumnName("path");
         }
     }

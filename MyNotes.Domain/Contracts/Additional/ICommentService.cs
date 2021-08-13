@@ -11,11 +11,11 @@ namespace MyNotes.Domain.Contracts.Additional
 
         Task<List<Comment>> GetList(Guid ownerId, int take, int skip);
 
-        Task<bool> Add(Comment comment);
+        Task<bool> Add(Comment entity);
 
         Task<Comment> Remove(Guid ownerId, Guid id);
 
-        Task<Comment> Update(Comment comment);
+        Task<Comment> Update(Comment entity);
 
         Task<List<Comment>> GetByParagraph(Guid ownerId, Guid ParagraphId, int take, int skip);
 

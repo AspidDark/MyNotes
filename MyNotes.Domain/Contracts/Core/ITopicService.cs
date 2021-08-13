@@ -11,11 +11,11 @@ namespace MyNotes.Domain.Contracts.Core
 
         Task<List<Topic>> GetList(Guid ownerId, int take, int skip);
 
-        Task<bool> Add(Topic topic);
+        Task<bool> Add(Topic entity);
 
         Task<bool> Remove(Guid ownerId, Guid id);
 
-        Task<Topic> Update(Topic topic);
+        Task<Topic> Update(Topic entity);
 
         Task<bool> RemoveAllByUser(Guid ownerId);
     }

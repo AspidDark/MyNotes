@@ -4,8 +4,8 @@ namespace MyNotes.Domain.Entities.Core
 {
     public class FileEntity : BaseNoteEntity
     {
-        public Guid NoteId { get; set; }
-        public Note Note { get; set; }
+        public Guid ParagraphId { get; set; }
+        public Paragraph Paragraph { get; set; }
         public string Path { get; set; }
     }
 }

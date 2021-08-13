@@ -13,11 +13,11 @@ namespace MyNotes.Domain.Contracts.Rights
 
         Task<List<GlobalRight>> GetList(Guid ownerId, int take, int skip);
 
-        Task<bool> Add(GlobalRight right);
+        Task<bool> Add(GlobalRight entity);
 
         Task<GlobalRight> Remove(Guid id);
 
-        Task<GlobalRight> Update(GlobalRight right);
+        Task<GlobalRight> Update(GlobalRight entity);
 
         Task<bool> RemoveAllByUser(Guid ownerId);
     }

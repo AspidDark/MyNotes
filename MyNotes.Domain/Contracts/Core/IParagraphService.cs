@@ -9,17 +9,15 @@ namespace MyNotes.Domain.Contracts.Core
     {
         Task<Paragraph> Get(Guid id);
 
-        Task<List<Paragraph>> GetList(Guid ownerId, int take, int skip);
+        Task<bool> Add(Paragraph entity);
 
-        Task<bool> Add(Paragraph paragraph);
+        Task<bool> Remove(Guid ownerId, Guid id);
 
-        Task<Paragraph> Remove(Guid ownerId, Guid id);
+        Task<Paragraph> Update(Paragraph entity);
 
-        Task<Paragraph> Update(Paragraph comment);
+        Task<List<Paragraph>> GetListByTopic(Guid ownerId, Guid topicId, int take, int skip);
 
-        Task<List<Paragraph>> GetByTopic(Guid ownerId, Guid TopicId, int take, int skip);
-
-        Task<bool> RemoveAllByTopic(Guid ownerId, Guid TopicId);
+        Task<bool> RemoveAllByTopic(Guid ownerId, Guid topicId);
 
     }
 }
