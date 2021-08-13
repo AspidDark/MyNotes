@@ -10,6 +10,12 @@ namespace MyNotes.DataAccess.Services
 {
     public class TempService : ITopicService
     {
+        private readonly AppDbContext _dbContext;
+
+        public TempService(AppDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
         public Task<bool> Add(Topic topic)
         {
             throw new NotImplementedException();

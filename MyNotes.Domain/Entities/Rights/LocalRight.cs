@@ -5,7 +5,7 @@ namespace MyNotes.Domain.Entities.Rights
 {
     public class LocalRight : BaseNoteEntity
     {
-        public Guid AllowedToUserId { get; set; }
+        public Guid AllowedUserId { get; set; }
 
         public AccessType AccessType { get; set; }
 
