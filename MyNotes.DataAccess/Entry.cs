@@ -1,13 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MyNotes.DataAccess.Services;
+using MyNotes.DataAccess.Services.Core;
 using MyNotes.Domain.Contracts.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyNotes.DataAccess
 {
@@ -21,7 +16,8 @@ namespace MyNotes.DataAccess
                     x => x.MigrationsAssembly("MyNotes.DataAccess"));
             });
 
-            services.AddScoped<ITopicService, TempService>();
+            services.AddScoped<ITopicService, TopicService>();
+
             return services;
         }
     }

@@ -13,11 +13,9 @@ namespace MyNotes.Domain.Contracts.Core
 
         Task<bool> Add(Topic topic);
 
-        Task<Topic> Remove(Guid ownerId, Guid id);
+        Task<bool> Remove(Guid ownerId, Guid id);
 
-        Task<Topic> Update(Topic comment);
-
-        Task<List<Topic>> GetByUser(Guid ownerId, int take, int skip);
+        Task<Topic> Update(Topic topic);
 
         Task<bool> RemoveAllByUser(Guid ownerId);
     }
