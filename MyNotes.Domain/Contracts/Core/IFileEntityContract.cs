@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 
 namespace MyNotes.Domain.Contracts.Core
 {
-    public interface INoteService
+    public interface IFileEntityContract
     {
-        Task<Note> Get(Guid id);
+        Task<FileEntity> Get(Guid id);
 
-        Task<bool> Add(Note entity);
+        Task<bool> Add(FileEntity entity);
 
         Task<bool> Remove(Guid ownerId, Guid id);
 
-        Task<Note> Update(Note entity);
+        Task<FileEntity> Update(FileEntity entity);
 
-        Task<List<Note>> GetListByParagraph(Guid ownerId, Guid paragraphId, int take, int skip);
+        Task<List<FileEntity>> GetListByParagraph(Guid ownerId, Guid paragraphId, int take, int skip);
 
         Task<bool> RemoveAllByParagraph(Guid ownerId, Guid paragraphId);
     }

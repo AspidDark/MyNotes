@@ -5,19 +5,16 @@ using System.Threading.Tasks;
 
 namespace MyNotes.Domain.Contracts.Rights
 {
-    public interface IGlobalRightService
+    public interface IGlobalRightContract
     {
-        Task<GlobalRight> GetById(Guid rightId);
+        Task<GlobalRight> Get(Guid rightId);
+        Task<GlobalRight> Update(GlobalRight entity);
+        Task<bool> Add(GlobalRight entity);
+        Task<bool> Remove(Guid ownerId, Guid id);
 
         Task<GlobalRight> GetByOwnerAndRequesterId(Guid ownerId, Guid userId);
 
         Task<List<GlobalRight>> GetList(Guid ownerId, int take, int skip);
-
-        Task<bool> Add(GlobalRight entity);
-
-        Task<GlobalRight> Remove(Guid id);
-
-        Task<GlobalRight> Update(GlobalRight entity);
 
         Task<bool> RemoveAllByUser(Guid ownerId);
     }

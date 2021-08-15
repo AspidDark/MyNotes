@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyNotes.DataAccess.Services.Core
 {
-    public class FileEntityService : BaseService<FileEntity>, IFileEntityService
+    public class FileEntityService : BaseService<FileEntity>, IFileEntityContract
     {
         private readonly AppDbContext _appDbContext;
         private readonly ILogger<FileEntityService> _logger;

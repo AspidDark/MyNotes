@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyNotes.Domain.Contracts.Helping
 {
-    public interface ITagService
+    public interface ITagServiceContract
     {
     }
 }

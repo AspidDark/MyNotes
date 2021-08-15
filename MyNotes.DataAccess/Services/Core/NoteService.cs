@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyNotes.DataAccess.Services.Core
 {
-    public class NoteService : BaseService<Note>, INoteService
+    public class NoteService : BaseService<Note>, INoteContract
     {
         private readonly AppDbContext _appDbContext;
         private readonly ILogger<NoteService> _logger;

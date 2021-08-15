@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MyNotes.Domain.Contracts.Core
 {
-    public interface ITopicService
+    public interface ITopicContract
     {
         Task<Topic> Get(Guid id);
 

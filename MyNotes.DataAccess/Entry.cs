@@ -16,7 +16,7 @@ namespace MyNotes.DataAccess
                     x => x.MigrationsAssembly("MyNotes.DataAccess"));
             });
 
-            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<ITopicContract, TopicService>();
 
             return services;
         }

@@ -18,9 +18,9 @@ namespace MyNotes.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-        private readonly ITopicService _topicService;
+        private readonly ITopicContract _topicService;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, ITopicService topicService)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, ITopicContract topicService)
         {
             _topicService = topicService;
             _logger = logger;

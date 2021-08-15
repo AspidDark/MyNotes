@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace MyNotes.Domain.Contracts.Rights
 {
-    public interface ILocalRightService
+    public interface ILocalRightContract
     {
-        Task<LocalRight> GetById(Guid rightId);
+        Task<LocalRight> Get(Guid rightId);
+        Task<bool> Add(LocalRight entity);
+
+        Task<bool> Remove(Guid ownerId, Guid id);
+
+        Task<LocalRight> Update(LocalRight entity);
 
         Task<LocalRight> GetUserRightToResource(Guid ownerId, Guid userId, Guid resourceId);
 
@@ -16,14 +21,6 @@ namespace MyNotes.Domain.Contracts.Rights
 
         Task<List<LocalRight>> GetUserAllowedResources(Guid ownerId, Guid userId, EntityType entityType, int take, int skip);
 
-        Task<LocalRight> AddRight(Guid ownerId, Guid userId, EntityType entityType, Guid entityId);
-
-        Task<bool> Add(LocalRight entity);
-
-        Task<LocalRight> Remove(Guid id);
-
-        Task<LocalRight> Update(LocalRight entity);
-
-        Task<bool> RemoveAllByUser(Guid userID);
+        Task<bool> RemoveAllByUser(Guid ownerId);
     }
 }
