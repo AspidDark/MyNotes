@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MyNotes.DataAccess.Services.Additional;
 using MyNotes.DataAccess.Services.Core;
+using MyNotes.DataAccess.Services.Rights;
+using MyNotes.Domain.Contracts.Additional;
 using MyNotes.Domain.Contracts.Core;
+using MyNotes.Domain.Contracts.Rights;
 
 namespace MyNotes.DataAccess
 {
@@ -16,7 +20,15 @@ namespace MyNotes.DataAccess
                     x => x.MigrationsAssembly("MyNotes.DataAccess"));
             });
 
+            services.AddScoped<ICommentContract, CommentService>();
+
+            services.AddScoped<IFileEntityContract, FileEntityService>();
+            services.AddScoped<INoteContract, NoteService>();
+            services.AddScoped<IParagraphContract, ParagraphService>();
             services.AddScoped<ITopicContract, TopicService>();
+
+            services.AddScoped<IGlobalRightContract, GlobalRightService>();
+            services.AddScoped<ILocalRightContract, LocalRightService>();
 
             return services;
         }
