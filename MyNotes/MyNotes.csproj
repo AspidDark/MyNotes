@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MyNotes.Contracts\MyNotes.Contracts.csproj" />
     <ProjectReference Include="..\MyNotes.DataAccess\MyNotes.DataAccess.csproj" />
-    <ProjectReference Include="..\MyNotes.Domain\MyNotes.Domain.csproj" />
     <ProjectReference Include="..\MyNotes.Services\MyNotes.Services.csproj" />
   </ItemGroup>
 

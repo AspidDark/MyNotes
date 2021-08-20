@@ -5,8 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="V1\Request\" />
-    <Folder Include="V1\Response\" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyNotes.Domain\MyNotes.Domain.csproj" />
   </ItemGroup>
 
 </Project>

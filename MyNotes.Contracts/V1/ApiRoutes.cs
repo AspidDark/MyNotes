@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MyNotes.Contracts.V1
+﻿namespace MyNotes.Contracts.V1
 {
     public static class ApiRoutes
     {
@@ -13,41 +7,18 @@ namespace MyNotes.Contracts.V1
 
         public const string Base = Root + "/" + Version;
 
-        public static class Posts
+        public static class Topics
         {
-            public const string GetAll = Base + "/posts";
 
-            public const string Delete = Base + "/posts/{postId}:Guid";
+            public const string Get = Base + "/topic";
 
-            public const string Update = Base + "/posts/{postId}:Guid";
+            public const string GetAll = Base + "/topics";
 
-            public const string Get = Base + "/posts/{postId}:Guid"; //(*)!!!!
+            public const string Create = Base + "/topic";
 
-            public const string Create = Base + "/posts";
-            // public const string Create = "api/v1/create";
-            //  public static readonly string Get = "api/v1/posts/{postId}";
-        }
+            public const string Update = Base + "/topic/{topicId}:Guid";
 
-        public static class Identity
-        {
-            public const string Login = Base + "/identity/login";
-
-            public const string Register = Base + "/identity/register";
-
-            public const string Refresh = Base + "/identity/refresh";
-
-            public const string FacebookAuth = Base + "/identity/auth/fb";
-        }
-
-        public static class Tags
-        {
-            public const string GetAll = Base + "/tags";
-
-            public const string Get = Base + "/tags/{tagName}";
-
-            public const string Create = Base + "/tags";
-
-            public const string Delete = Base + "/tags/{tagName}";
+            public const string Delete = Base + "/topic/{topicId}:Guid,{userId}:Guid";
         }
     }
 }
