@@ -1,5 +1,6 @@
 ﻿using MyNotes.Domain.Entities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -42,6 +43,8 @@ namespace MyNotes.DataAccess.Services
 
         public async Task<T> Update(T t)
         {
+            var oldVesion = _appDbContext.Set<T>().FirstOrDefault(x => x.Id == t.Id);
+            t.EditDate = DateTime.Now;
             var result = _appDbContext.Set<T>().Update(t);
             var updateResult = await _appDbContext.SaveChangesAsync();
             if (updateResult == 1)
@@ -50,5 +53,8 @@ namespace MyNotes.DataAccess.Services
             }
             return null;
         }
+
+        public async Task<List<T>> GetAllowedList(List<Guid> entityIds)
+            => _appDbContext.Set<T>().Where(x => entityIds.Contains(x.Id)).ToList();
     }
 }

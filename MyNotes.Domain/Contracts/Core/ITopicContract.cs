@@ -18,5 +18,7 @@ namespace MyNotes.Domain.Contracts.Core
         Task<Topic> Update(Topic entity);
 
         Task<bool> RemoveAllByUser(Guid ownerId);
+
+        Task<List<Topic>> GetAllowedList(List<Guid> entityIds);
     }
 }

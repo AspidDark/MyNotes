@@ -34,23 +34,27 @@ namespace MyNotes.Services.Services
 
         public async Task<BaseResponseDto> Get(EntityByUserIdFilter entityByUserIdFilter)
         {
+            if (entityByUserIdFilter.EntityId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.entityIdEmpty);
+            }
+
+            if (entityByUserIdFilter.UserId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.userIdEmpty);
+            }
+
             try
             {
-                var (response, topic) = await VerifyParameters(entityByUserIdFilter.EntityId, entityByUserIdFilter.UserId);
-                if (!response.Result)
+                var (result, topic) = await GetTopic(entityByUserIdFilter.EntityId);
+                if (!result)
                 {
-                    return response;
+                    return ErrorHelper.ErrorResult(Messages.noTopic);
                 }
 
-                if (topic.OwnerId != entityByUserIdFilter.UserId)
+                if (!await IsAccessAllowed(topic, entityByUserIdFilter.UserId))
                 {
-                    var userAccess = await _accessToEntity.CheckAccessToEntity(topic.OwnerId,
-                        entityByUserIdFilter.UserId, entityByUserIdFilter.EntityId);
-
-                    if (userAccess == Domain.Enums.AccessType.Closed)
-                    {
-                        return ErrorHelper.ErrorResult(Messages.noAccess);
-                    }
+                    return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
 
                 var mapResult = _mapper.Map<TopicDto>(topic);
@@ -61,55 +65,134 @@ namespace MyNotes.Services.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"10001");
-                return ErrorHelper.ErrorResult(Messages.noAccess);
+                _logger.LogError(e, "10001");
+                return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
         }
 
-        public async Task<List<string>> GetList(BaseUserIdFilter baseUserIdFilter, PaginationFilter paginationFilter)
+        public async Task<BaseResponseDto> GetList(BaseUserIdFilter baseUserIdFilter, PaginationFilter paginationFilter)
         {
-
-            return null;
-        }
-
-        public async Task<string> Create(TopicCreate topicCreate)
-        {
-
-            return null;
-        }
-
-        public async Task<string> Update(Guid topicId, TopicUpdate topicUpdate)
-        {
-
-            return null;
-        }
-
-        public async Task<string> Delete(Guid topicId, Guid userId)
-        {
-            return null;
-        }
-
-
-        private async Task<(BaseResponseDto, Topic)> VerifyParameters(Guid topicId, Guid userId)
-        {
-            if (topicId == Guid.Empty)
+            if (baseUserIdFilter.UserId == Guid.Empty)
             {
-                return (ErrorHelper.ErrorResult(Messages.entityIdEmpty), null);
+                return ErrorHelper.ErrorResult(Messages.userIdEmpty);
             }
-
-            if (userId == Guid.Empty)
+            try
             {
-                return (ErrorHelper.ErrorResult(Messages.userIdEmpty), null); ;
-            }
+                var result = await _topicContract.GetList(baseUserIdFilter.UserId,
+                    paginationFilter.PageSize,
+                    paginationFilter.PageSize * paginationFilter.PageNumber);
 
+                var responseBody = _mapper.Map<List<TopicDto>>(result);
+
+                return new Response<List<TopicDto>>(responseBody) { Result = true };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "10002");
+                return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
+            }
+        }
+
+        //public async Task<BaseResponseDto> GetAllowedList(Guid ownerId, Guid userId, PaginationFilter paginationFilter)
+        //{
+        //    if (ownerId == Guid.Empty || userId == Guid.Empty)
+        //    {
+        //        return ErrorHelper.ErrorResult(Messages.userIdEmpty);
+        //    }
+
+
+        //}
+
+        public async Task<BaseResponseDto> Create(TopicCreate topicCreate)
+        {
+            try
+            {
+                var topic = _mapper.Map<Topic>(topicCreate);
+                var result = await _topicContract.Add(topic);
+                return new BaseResponseDto { Result = result };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "10003");
+                return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
+            }
+        }
+
+        public async Task<BaseResponseDto> Update(TopicUpdate topicUpdate)
+        {
+            try
+            {
+                var (result, topic) = await GetTopic(topicUpdate.TopicId);
+                if (!result)
+                {
+                    return ErrorHelper.ErrorResult(Messages.noTopic);
+                }
+                if (!await IsAccessAllowed(topic, topicUpdate.UserId))
+                {
+                    return ErrorHelper.ErrorResult(Messages.noAccess);
+                }
+
+                var topicMaped = _mapper.Map<Topic>(topicUpdate);
+                topicMaped.Id = topicUpdate.TopicId;
+                var upateResult = await _topicContract.Update(topicMaped);
+                return new Response<Topic>(upateResult) { Result = true };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "10004");
+                return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
+            }
+        }
+
+        public async Task<BaseResponseDto> Delete(Guid topicId, Guid userId)
+        {
+            try
+            {
+                var (result, topic) = await GetTopic(topicId);
+                if (!result)
+                {
+                    return ErrorHelper.ErrorResult(Messages.noTopic);
+                }
+
+                if (!await IsAccessAllowed(topic, userId))
+                {
+                    return ErrorHelper.ErrorResult(Messages.noAccess);
+                }
+
+                var deleteResult = await _topicContract.Remove(userId, topicId);
+                return new BaseResponseDto { Result = deleteResult };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "10005");
+                return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
+            }
+        }
+
+        private async Task<(bool, Topic)> GetTopic(Guid topicId)
+        {
             var topic = await _topicContract.Get(topicId);
             if (topic is null)
             {
-                return (ErrorHelper.ErrorResult(Messages.noTopic), null);
+                return (false, null);
             }
+            return (true, topic);
 
-            return (new BaseResponseDto { Result = true }, topic);
+        }
 
+        private async Task<bool> IsAccessAllowed(Topic topic, Guid userId)
+        {
+            if (topic.OwnerId != userId)
+            {
+                var userAccess = await _accessToEntity.CheckAccessToEntity(topic.OwnerId,
+                    userId, topic.Id);
+
+                if (userAccess == Domain.Enums.AccessType.Closed)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

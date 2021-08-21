@@ -45,6 +45,7 @@ namespace MyNotes.Controllers
         public async Task<IActionResult> Update([FromRoute] Guid topicId, [FromBody] TopicUpdateRequest request)
         {
             var topicUpdate = _mapper.Map<TopicUpdate>(request);
+            topicUpdate.TopicId = topicId;
             return Ok();
         }
 

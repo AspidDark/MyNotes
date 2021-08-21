@@ -2,6 +2,7 @@
 using MyNotes.Domain.Enums;
 using MyNotes.Services.ServiceContracts;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MyNotes.Services.Services
@@ -36,5 +37,10 @@ namespace MyNotes.Services.Services
             }
             return AccessType.Closed;
         }
+
+        //public async Task<List<Guid>> AllowedEntities()
+        //{ 
+        
+        //}
     }
 }
