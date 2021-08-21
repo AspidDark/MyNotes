@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using MyNotes.Contracts.V1;
 using MyNotes.Contracts.V1.Response;
 using MyNotes.Domain.Contracts.Core;
 using MyNotes.Domain.Contracts.Rights;
 using MyNotes.Domain.Entities.Core;
+using MyNotes.Services.Helpers;
 using MyNotes.Services.InternalDto;
 using MyNotes.Services.ServiceContracts;
 using System;
@@ -20,55 +22,48 @@ namespace MyNotes.Services.Services
         private readonly ITopicContract _topicContract;
         private readonly IAccessToEntity _accessToEntity;
         private readonly IMapper _mapper;
+        private readonly ILogger<TopicLogic> _logger;
 
-        public TopicLogic(ITopicContract topicContract, IAccessToEntity accessToEntity, IMapper mapper)
+        public TopicLogic(ITopicContract topicContract, IAccessToEntity accessToEntity, IMapper mapper, ILogger<TopicLogic> logger)
         {
             _topicContract = topicContract;
             _accessToEntity = accessToEntity;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<BaseResponseDto> Get(EntityByUserIdFilter entityByUserIdFilter)
         {
             try
             {
-                bool entityParseResult = Guid.TryParse(entityByUserIdFilter.EntityId, out Guid entityId);
-                if (!entityParseResult)
+                var (response, topic) = await VerifyParameters(entityByUserIdFilter.EntityId, entityByUserIdFilter.UserId);
+                if (!response.Result)
                 {
-                    return null;
-                }
-                bool userParseResult = Guid.TryParse(entityByUserIdFilter.UserId, out Guid userId);
-                if (!userParseResult)
-                {
-                    return null;
-                }
-
-                var topic = await _topicContract.Get(entityId);
-                if (topic is null)
-                {
-                    return ErrorResult("No Topic");
-                }
-
-                if (topic.OwnerId == userId)
-                {
-                    var mapResult = _mapper.Map<TopicDto>(topic);
-                    var response = new Response<TopicDto>(mapResult)
-                    {
-                        Result = true
-                    };
-
                     return response;
                 }
 
+                if (topic.OwnerId != entityByUserIdFilter.UserId)
+                {
+                    var userAccess = await _accessToEntity.CheckAccessToEntity(topic.OwnerId,
+                        entityByUserIdFilter.UserId, entityByUserIdFilter.EntityId);
 
+                    if (userAccess == Domain.Enums.AccessType.Closed)
+                    {
+                        return ErrorHelper.ErrorResult(Messages.noAccess);
+                    }
+                }
 
+                var mapResult = _mapper.Map<TopicDto>(topic);
+                return new Response<TopicDto>(mapResult)
+                {
+                    Result = true
+                };
             }
             catch (Exception e)
-            { 
-            
+            {
+                _logger.LogError(e, $"10001");
+                return ErrorHelper.ErrorResult(Messages.noAccess);
             }
-
-
         }
 
         public async Task<List<string>> GetList(BaseUserIdFilter baseUserIdFilter, PaginationFilter paginationFilter)
@@ -95,10 +90,26 @@ namespace MyNotes.Services.Services
         }
 
 
-
-        private static BaseResponseDto ErrorResult(string message) 
+        private async Task<(BaseResponseDto, Topic)> VerifyParameters(Guid topicId, Guid userId)
         {
-            return new BaseResponseDto { Result = false, Message=message };
+            if (topicId == Guid.Empty)
+            {
+                return (ErrorHelper.ErrorResult(Messages.entityIdEmpty), null);
+            }
+
+            if (userId == Guid.Empty)
+            {
+                return (ErrorHelper.ErrorResult(Messages.userIdEmpty), null); ;
+            }
+
+            var topic = await _topicContract.Get(topicId);
+            if (topic is null)
+            {
+                return (ErrorHelper.ErrorResult(Messages.noTopic), null);
+            }
+
+            return (new BaseResponseDto { Result = true }, topic);
+
         }
     }
 }

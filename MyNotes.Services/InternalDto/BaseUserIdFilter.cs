@@ -1,7 +1,9 @@
-﻿namespace MyNotes.Services.InternalDto
+﻿using System;
+
+namespace MyNotes.Services.InternalDto
 {
     public class BaseUserIdFilter
     {
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
     }
 }
