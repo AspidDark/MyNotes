@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MyNotes.Contracts.V1.Request;
 using MyNotes.Contracts.V1.Request.Queries;
 using MyNotes.Services.InternalDto;
 
@@ -11,6 +12,10 @@ namespace MyNotes.Map
             CreateMap<PaginationQuery, PaginationFilter>();
             CreateMap<BaseUserIdQuery, BaseUserIdFilter>();
             CreateMap<EntityByUserIdQuery, EntityByUserIdFilter>();
+
+            CreateMap<TopicCreateRequest, TopicCreate>();
+            CreateMap<TopicUpdateRequest, TopicUpdate>();
+
         }
     }
 }

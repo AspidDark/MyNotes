@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MyNotes.Contracts.V1.Response
+﻿namespace MyNotes.Contracts.V1.Response
 {
-    public class TopicDto
+    public class TopicDto : BaseResponsseDto
     {
+        public string Name { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace MyNotes.Contracts.V1
 {
-    public class Response<T>
+    public class Response<T> : BaseResponseDto
     {
         public Response() { }
 

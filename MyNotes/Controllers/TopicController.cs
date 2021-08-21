@@ -35,15 +35,16 @@ namespace MyNotes.Controllers
         }
 
         [HttpPost(ApiRoutes.Topics.Create)]
-        public async Task<IActionResult> Create([FromBody] TopicCreateRequest createTopicRequest)
+        public async Task<IActionResult> Create([FromBody] TopicCreateRequest request)
         {
+            var topicCreate = _mapper.Map<TopicCreate>(request);
             return Ok();
         }
 
         [HttpPut(ApiRoutes.Topics.Update)]
         public async Task<IActionResult> Update([FromRoute] Guid topicId, [FromBody] TopicUpdateRequest request)
         {
-
+            var topicUpdate = _mapper.Map<TopicUpdate>(request);
             return Ok();
         }
 

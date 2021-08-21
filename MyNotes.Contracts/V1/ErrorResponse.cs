@@ -11,6 +11,11 @@ namespace MyNotes.Contracts.V1
             Errors.Add(error);
         }
 
+        public void Add(ErrorModel error)
+        {
+            Errors.Add(error);
+        }
+
         public List<ErrorModel> Errors { get; set; } = new List<ErrorModel>();
     }
 }
