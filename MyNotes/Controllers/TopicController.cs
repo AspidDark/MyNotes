@@ -6,6 +6,8 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using MyNotes.Services.InternalDto;
+using MyNotes.Extensions;
+using MyNotes.Services.ServiceContracts;
 
 namespace MyNotes.Controllers
 {
@@ -14,45 +16,58 @@ namespace MyNotes.Controllers
     public class TopicController : ControllerBase
     {
         private readonly IMapper _mapper;
-        public TopicController(IMapper mapper)
+        private readonly ITopicLogic _topicLogic;
+        public TopicController(IMapper mapper, ITopicLogic topicLogic)
         {
             _mapper = mapper;
+            _topicLogic = topicLogic;
         }
 
         [HttpGet(ApiRoutes.Topics.Get)]
-        public async Task<IActionResult> Get([FromQuery] EntityByUserIdQuery entityByUserIdQuery)
+        public async Task<IActionResult> Get([FromQuery] EntityQuery entityByUserIdQuery)
         {
             var entityByUserIdfilter = _mapper.Map<EntityByUserIdFilter>(entityByUserIdQuery);
-            return Ok();
+            entityByUserIdfilter.UserId = HttpContext.GetUserId();
+            var response = await _topicLogic.Get(entityByUserIdfilter);
+            return Ok(response);
         }
 
         [HttpGet(ApiRoutes.Topics.GetAll)]
-        public async Task<IActionResult> GetAll([FromQuery] BaseUserIdQuery query, [FromQuery] PaginationQuery paginationQuery)
+        public async Task<IActionResult> GetAll([FromQuery] PaginationQuery paginationQuery)
         {
-            var userIdFilter = _mapper.Map<BaseUserIdFilter>(query);
+            BaseUserIdFilter userIdFilter = new()
+            { 
+                UserId = HttpContext.GetUserId()
+            };
             var paginationfilter = _mapper.Map<PaginationFilter>(paginationQuery);
-            return Ok();
+            var response = await _topicLogic.GetList(userIdFilter, paginationfilter);
+            return Ok(response);
         }
 
         [HttpPost(ApiRoutes.Topics.Create)]
         public async Task<IActionResult> Create([FromBody] TopicCreateRequest request)
         {
             var topicCreate = _mapper.Map<TopicCreate>(request);
-            return Ok();
+            topicCreate.UserId = HttpContext.GetUserId();
+            var response = await _topicLogic.Create(topicCreate);
+            return Ok(response);
         }
 
         [HttpPut(ApiRoutes.Topics.Update)]
         public async Task<IActionResult> Update([FromRoute] Guid topicId, [FromBody] TopicUpdateRequest request)
         {
             var topicUpdate = _mapper.Map<TopicUpdate>(request);
+            topicUpdate.UserId = HttpContext.GetUserId();
             topicUpdate.TopicId = topicId;
-            return Ok();
+            var response = await _topicLogic.Update(topicUpdate);
+            return Ok(response);
         }
 
         [HttpDelete(ApiRoutes.Topics.Delete)]
-        public async Task<IActionResult> Delete([FromRoute] Guid topicId, [FromRoute] Guid userId)
+        public async Task<IActionResult> Delete([FromRoute] Guid topicId)
         {
-            return Ok();
+            var result= await _topicLogic.Delete(topicId, HttpContext.GetUserId());
+            return Ok(result);
         }
     }
 }

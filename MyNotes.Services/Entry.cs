@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MyNotes.Services.ServiceContracts;
+using MyNotes.Services.Services;
+using AutoMapper;
 
 namespace MyNotes.Services
 {
@@ -13,7 +11,8 @@ namespace MyNotes.Services
         public static IServiceCollection AddServiceLogic(this IServiceCollection services, 
             IConfiguration configuration)
         {
-
+            services.AddScoped<IAccessToEntity, AccessToEntity>();
+            services.AddScoped<ITopicLogic, TopicLogic>();
             return services;
         }
     }

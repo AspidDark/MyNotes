@@ -3,21 +3,18 @@ using Microsoft.Extensions.Logging;
 using MyNotes.Contracts.V1;
 using MyNotes.Contracts.V1.Response;
 using MyNotes.Domain.Contracts.Core;
-using MyNotes.Domain.Contracts.Rights;
 using MyNotes.Domain.Entities.Core;
 using MyNotes.Services.Helpers;
 using MyNotes.Services.InternalDto;
 using MyNotes.Services.ServiceContracts;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MyNotes.Services.Services
 {
 
-    public class TopicLogic
+    public class TopicLogic : ITopicLogic
     {
         private readonly ITopicContract _topicContract;
         private readonly IAccessToEntity _accessToEntity;

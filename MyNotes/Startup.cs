@@ -1,21 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MyNotes.DataAccess;
 using MyNotes.HealthCheck;
 using MyNotes.Services;
 using RisGmp.Adapter.HealthCheck;
 using Swashbuckle.AspNetCore.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MyNotes
 {
@@ -44,7 +37,6 @@ namespace MyNotes
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -52,6 +44,12 @@ namespace MyNotes
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyNotes", Version = "v1" });
             });
             services.AddSwaggerExamplesFromAssemblyOf<Startup>();
+
+            services.AddAutoMapper(cfg=>cfg.AddMaps(new[]
+            {
+                "MyNotes",
+                "MyNotes.Services"
+            }));
 
             services.AddDataAccess(Configuration);
             services.AddServiceLogic(Configuration);

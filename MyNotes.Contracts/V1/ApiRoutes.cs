@@ -18,7 +18,7 @@
 
             public const string Update = Base + "/topic/{topicId}:Guid";
 
-            public const string Delete = Base + "/topic/{topicId}:Guid,{userId}:Guid";
+            public const string Delete = Base + "/topic/{topicId}:Guid";
         }
     }
 }

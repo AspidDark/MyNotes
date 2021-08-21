@@ -10,8 +10,7 @@ namespace MyNotes.Map
         public RequestToInternal()
         {
             CreateMap<PaginationQuery, PaginationFilter>();
-            CreateMap<BaseUserIdQuery, BaseUserIdFilter>();
-            CreateMap<EntityByUserIdQuery, EntityByUserIdFilter>();
+            CreateMap<EntityQuery, EntityByUserIdFilter>();
 
             CreateMap<TopicCreateRequest, TopicCreate>();
             CreateMap<TopicUpdateRequest, TopicUpdate>();
