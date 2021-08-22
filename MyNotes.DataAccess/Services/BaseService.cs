@@ -43,7 +43,6 @@ namespace MyNotes.DataAccess.Services
 
         public async Task<T> Update(T t)
         {
-            var oldVesion = _appDbContext.Set<T>().FirstOrDefault(x => x.Id == t.Id);
             t.EditDate = DateTime.Now;
             var result = _appDbContext.Set<T>().Update(t);
             var updateResult = await _appDbContext.SaveChangesAsync();

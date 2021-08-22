@@ -128,10 +128,9 @@ namespace MyNotes.Services.Services
                 {
                     return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
+                topic.Name = topicUpdate.Name;
 
-                var topicMaped = _mapper.Map<Topic>(topicUpdate);
-                topicMaped.Id = topicUpdate.TopicId;
-                var upateResult = await _topicContract.Update(topicMaped);
+                var upateResult = await _topicContract.Update(topic);
                 return new Response<Topic>(upateResult) { Result = true };
             }
             catch (Exception e)

@@ -26,6 +26,7 @@ namespace MyNotes.Controllers
         [HttpGet(ApiRoutes.Topics.Get)]
         public async Task<IActionResult> Get([FromQuery] EntityQuery entityByUserIdQuery)
         {
+            //Validate here
             var entityByUserIdfilter = _mapper.Map<EntityByUserIdFilter>(entityByUserIdQuery);
             entityByUserIdfilter.UserId = HttpContext.GetUserId();
             var response = await _topicLogic.Get(entityByUserIdfilter);
