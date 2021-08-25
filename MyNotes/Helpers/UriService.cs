@@ -19,7 +19,7 @@ namespace MyNotes.Helpers
 
         public Uri GetTopicUri(string postId)
         {
-            return new Uri(_baseUri + ApiRoutes.Topics.Get.Replace("{postId}", postId));
+            return new Uri(_baseUri + ApiRoutes.TopicsRoute.Get.Replace("{postId}", postId));
         }
 
         public Uri GetAllTopicsUri(PaginationQuery pagination = null)

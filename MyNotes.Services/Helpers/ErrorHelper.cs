@@ -4,7 +4,7 @@ namespace MyNotes.Services.Helpers
 {
     public static class ErrorHelper
     {
-        public static BaseResponseDto ErrorResult(string message)
-            => new BaseResponseDto { Result = false, Message = message };
+        public static BaseResponse ErrorResult(string message)
+            => new BaseResponse { Result = false, Message = message };
     }
 }

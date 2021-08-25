@@ -4,11 +4,13 @@ using MyNotes.Domain.Entities.Core;
 
 namespace MyNotes.Services.Map
 {
-    public class InternalToResponse : Profile
+    public class EntityToResponse : Profile
     {
-        public InternalToResponse()
+        public EntityToResponse()
         {
             CreateMap<Topic, TopicDto>();
+
+            CreateMap<Paragraph, ParagraphDto>();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace MyNotes.Contracts.V1
 {
-    public class BaseResponseDto
+    public class BaseResponse
     {
         public bool Result { get; set; }
 

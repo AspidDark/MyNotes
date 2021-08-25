@@ -10,10 +10,13 @@ namespace MyNotes.Map
         public RequestToInternal()
         {
             CreateMap<PaginationQuery, PaginationFilter>();
-            CreateMap<EntityQuery, EntityByUserIdFilter>();
+            CreateMap<EntityQuery, ByEntityFilter>();
 
             CreateMap<TopicCreateRequest, TopicCreate>();
             CreateMap<TopicUpdateRequest, TopicUpdate>();
+
+            CreateMap<ParagraphCreateRequest, ParagraphCreate>();
+            CreateMap<ParagraphUpdateRequest, ParagraphUpdate>();
 
         }
     }

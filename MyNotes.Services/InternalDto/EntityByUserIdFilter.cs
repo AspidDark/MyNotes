@@ -2,7 +2,7 @@
 
 namespace MyNotes.Services.InternalDto
 {
-    public class EntityByUserIdFilter : BaseUserIdFilter
+    public class ByEntityFilter : BaseUserIdFilter
     {
         public Guid EntityId { get; set; }
     }

@@ -7,10 +7,10 @@ namespace MyNotes.Services.ServiceContracts
 {
     public interface ITopicLogic
     {
-        Task<BaseResponseDto> Create(TopicCreate topicCreate);
-        Task<BaseResponseDto> Delete(Guid topicId, Guid userId);
-        Task<BaseResponseDto> Get(EntityByUserIdFilter entityByUserIdFilter);
-        Task<BaseResponseDto> GetList(BaseUserIdFilter baseUserIdFilter, PaginationFilter paginationFilter);
-        Task<BaseResponseDto> Update(TopicUpdate topicUpdate);
+        Task<BaseResponse> Create(TopicCreate topicCreate);
+        Task<BaseResponse> Delete(Guid topicId, Guid userId);
+        Task<BaseResponse> Get(ByEntityFilter entityByUserIdFilter);
+        Task<BaseResponse> GetList(BaseUserIdFilter baseUserIdFilter, PaginationFilter paginationFilter);
+        Task<BaseResponse> Update(TopicUpdate topicUpdate);
     }
 }

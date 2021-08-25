@@ -1,6 +1,4 @@
-﻿using MyNotes.Domain.Entities.Helping;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyNotes.Domain.Entities.Core

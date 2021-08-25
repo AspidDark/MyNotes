@@ -13,6 +13,7 @@ namespace MyNotes.Services
         {
             services.AddScoped<IAccessToEntity, AccessToEntity>();
             services.AddScoped<ITopicLogic, TopicLogic>();
+            services.AddScoped<IParagraphLogic, ParagraphLogic>();
             return services;
         }
     }

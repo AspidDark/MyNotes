@@ -2,7 +2,7 @@
 {
     public enum EntityType : int
     {
-        Theme = 0,
+        Topic = 0,
         Paragraph = 1
     }
 }

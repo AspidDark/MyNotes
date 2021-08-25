@@ -23,17 +23,17 @@ namespace MyNotes.Controllers
             _topicLogic = topicLogic;
         }
 
-        [HttpGet(ApiRoutes.Topics.Get)]
+        [HttpGet(ApiRoutes.TopicsRoute.Get)]
         public async Task<IActionResult> Get([FromQuery] EntityQuery entityByUserIdQuery)
         {
             //Validate here
-            var entityByUserIdfilter = _mapper.Map<EntityByUserIdFilter>(entityByUserIdQuery);
+            var entityByUserIdfilter = _mapper.Map<ByEntityFilter>(entityByUserIdQuery);
             entityByUserIdfilter.UserId = HttpContext.GetUserId();
             var response = await _topicLogic.Get(entityByUserIdfilter);
             return Ok(response);
         }
 
-        [HttpGet(ApiRoutes.Topics.GetAll)]
+        [HttpGet(ApiRoutes.TopicsRoute.GetList)]
         public async Task<IActionResult> GetAll([FromQuery] PaginationQuery paginationQuery)
         {
             BaseUserIdFilter userIdFilter = new()
@@ -45,7 +45,7 @@ namespace MyNotes.Controllers
             return Ok(response);
         }
 
-        [HttpPost(ApiRoutes.Topics.Create)]
+        [HttpPost(ApiRoutes.TopicsRoute.Create)]
         public async Task<IActionResult> Create([FromBody] TopicCreateRequest request)
         {
             var topicCreate = _mapper.Map<TopicCreate>(request);
@@ -54,7 +54,7 @@ namespace MyNotes.Controllers
             return Ok(response);
         }
 
-        [HttpPut(ApiRoutes.Topics.Update)]
+        [HttpPut(ApiRoutes.TopicsRoute.Update)]
         public async Task<IActionResult> Update([FromRoute] Guid topicId, [FromBody] TopicUpdateRequest request)
         {
             var topicUpdate = _mapper.Map<TopicUpdate>(request);
@@ -64,7 +64,7 @@ namespace MyNotes.Controllers
             return Ok(response);
         }
 
-        [HttpDelete(ApiRoutes.Topics.Delete)]
+        [HttpDelete(ApiRoutes.TopicsRoute.Delete)]
         public async Task<IActionResult> Delete([FromRoute] Guid topicId)
         {
             var result= await _topicLogic.Delete(topicId, HttpContext.GetUserId());

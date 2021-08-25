@@ -9,30 +9,30 @@ using MyNotes.Services.InternalDto;
 using MyNotes.Services.ServiceContracts;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MyNotes.Services.Services
 {
-
-    public class TopicLogic : ITopicLogic
+    public class ParagraphLogic : IParagraphLogic
     {
-        private readonly ITopicContract _topicContract;
+        private readonly IParagraphContract _paragraphContract;
         private readonly IAccessToEntity _accessToEntity;
         private readonly IMapper _mapper;
-        private readonly ILogger<TopicLogic> _logger;
-
-        public TopicLogic(ITopicContract topicContract, 
-            IAccessToEntity accessToEntity, 
-            IMapper mapper, 
-            ILogger<TopicLogic> logger)
+        private readonly ILogger<ParagraphLogic> _logger;
+        public ParagraphLogic(IParagraphContract paragraphContract,
+            IAccessToEntity accessToEntity,
+        IMapper mapper,
+        ILogger<ParagraphLogic> logger)
         {
-            _topicContract = topicContract;
+            _paragraphContract = paragraphContract;
             _accessToEntity = accessToEntity;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<Contracts.V1.BaseResponse> Get(ByEntityFilter entityByUserIdFilter)
+        public async Task<BaseResponse> Get(ByEntityFilter entityByUserIdFilter)
         {
             if (entityByUserIdFilter.EntityId == Guid.Empty)
             {
@@ -46,135 +46,142 @@ namespace MyNotes.Services.Services
 
             try
             {
-                var (result, topic) = await GetTopic(entityByUserIdFilter.EntityId);
+                var (result, paragraph) = await GetParagraph(entityByUserIdFilter.EntityId);
                 if (!result)
                 {
                     return ErrorHelper.ErrorResult(Messages.noTopic);
                 }
 
-                if (!await IsAccessAllowed(topic, entityByUserIdFilter.UserId))
+                if (!await IsAccessAllowed(paragraph, entityByUserIdFilter.UserId))
                 {
                     return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
 
-                var mapResult = _mapper.Map<TopicDto>(topic);
-                return new Response<TopicDto>(mapResult)
+                var mapResult = _mapper.Map<ParagraphDto>(paragraph);
+                return new Response<ParagraphDto>(mapResult)
                 {
                     Result = true
                 };
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "10001");
+                _logger.LogError(e, "10006");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
+
         }
 
-        public async Task<BaseResponse> GetList(BaseUserIdFilter baseUserIdFilter, PaginationFilter paginationFilter)
+        public async Task<BaseResponse> GetList(ByEntityFilter filter, PaginationFilter paginationFilter)
         {
-            if (baseUserIdFilter.UserId == Guid.Empty)
+            if (filter.UserId == Guid.Empty)
             {
                 return ErrorHelper.ErrorResult(Messages.userIdEmpty);
             }
+
+            if (filter.EntityId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.topicIdEmpty);
+            }
             try
             {
-                var result = await _topicContract.GetList(baseUserIdFilter.UserId,
+                var result = await _paragraphContract.GetListByTopic(filter.UserId, filter.EntityId,
                     paginationFilter.PageSize,
                     paginationFilter.PageSize * paginationFilter.PageNumber);
 
-                var responseBody = _mapper.Map<List<TopicDto>>(result);
+                var responseBody = _mapper.Map<List<ParagraphDto>>(result);
 
-                return new Response<List<TopicDto>>(responseBody) { Result = true };
+                return new Response<List<ParagraphDto>>(responseBody) { Result = true };
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "10002");
+                _logger.LogError(e, "10007");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
         }
 
-        public async Task<BaseResponse> Create(TopicCreate topicCreate)
+        public async Task<BaseResponse> Create(ParagraphCreate paragraphCreate)
         {
             try
             {
-                var topic = _mapper.Map<Topic>(topicCreate);
-                var result = await _topicContract.Add(topic);
+                var entity = _mapper.Map<Paragraph>(paragraphCreate);
+                var result = await _paragraphContract.Add(entity);
                 return new BaseResponse { Result = result };
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "10003");
+                _logger.LogError(e, "10008");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
         }
 
-        public async Task<BaseResponse> Update(TopicUpdate topicUpdate)
+        public async Task<BaseResponse> Update(ParagraphUpdate entity)
         {
             try
             {
-                var (result, topic) = await GetTopic(topicUpdate.TopicId);
+                var (result, paragraph) = await GetParagraph(entity.ParagraphId);
                 if (!result)
                 {
-                    return ErrorHelper.ErrorResult(Messages.noTopic);
+                    return ErrorHelper.ErrorResult(Messages.noParagraph);
                 }
-                if (!await IsAccessAllowed(topic, topicUpdate.UserId))
+                if (!await IsAccessAllowed(paragraph, entity.UserId))
                 {
                     return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
-                topic.Name = topicUpdate.Name;
+                paragraph.Name = entity.Name;
 
-                var upateResult = await _topicContract.Update(topic);
-                return new Response<Topic>(upateResult) { Result = true };
+                var upateResult = await _paragraphContract.Update(paragraph);
+                return new Response<Paragraph>(upateResult) { Result = true };
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "10004");
+                _logger.LogError(e, "10009");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
         }
 
-        public async Task<BaseResponse> Delete(Guid topicId, Guid userId)
+        public async Task<BaseResponse> Delete(Guid paragraphId, Guid userId)
         {
             try
             {
-                var (result, topic) = await GetTopic(topicId);
+                var (result, entity) = await GetParagraph(paragraphId);
                 if (!result)
                 {
-                    return ErrorHelper.ErrorResult(Messages.noTopic);
+                    return ErrorHelper.ErrorResult(Messages.noParagraph);
                 }
 
-                if (!await IsAccessAllowed(topic, userId))
+                if (!await IsAccessAllowed(entity, userId))
                 {
                     return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
 
-                var deleteResult = await _topicContract.Remove(userId, topicId);
+                var deleteResult = await _paragraphContract.Remove(userId, paragraphId);
                 return new BaseResponse { Result = deleteResult };
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "10005");
+                _logger.LogError(e, "10010");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
         }
 
-        private async Task<(bool, Topic)> GetTopic(Guid topicId)
+
+        private async Task<(bool, Paragraph)> GetParagraph(Guid paragraphId)
         {
-            var topic = await _topicContract.Get(topicId);
-            if (topic is null)
+            var entity = await _paragraphContract.Get(paragraphId);
+            if (entity is null)
             {
                 return (false, null);
             }
-            return (true, topic);
+            return (true, entity);
 
         }
 
-        private async Task<bool> IsAccessAllowed(Topic topic, Guid userId)
+        private async Task<bool> IsAccessAllowed(Paragraph entity, Guid userId)
         {
-            if (topic.OwnerId != userId)
+            if (entity.OwnerId != userId)
             {
-                var userAccess = await _accessToEntity.CheckAccessToEntity(topic.OwnerId,
-                    userId, topic.Id);
+                var userAccess = await _accessToEntity.CheckAccessToEntity(entity.OwnerId,
+                    userId, entity.Id);
 
                 if (userAccess == Domain.Enums.AccessType.Closed)
                 {

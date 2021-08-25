@@ -2,7 +2,7 @@
 
 namespace MyNotes.Contracts.V1.Response
 {
-    public class BaseResponsseDto
+    public class BaseResponseDto
     {
         public Guid Id { get; set; }
         /// <summary>

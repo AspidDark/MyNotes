@@ -9,6 +9,8 @@ namespace MyNotes.Services.Map
         public InternalToEntity()
         {
             CreateMap<TopicCreate,Topic>().ForMember(dest=>dest.OwnerId, opt=>opt.MapFrom(src=>src.UserId));
+
+            CreateMap<ParagraphCreate, Paragraph>().ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src=>src.UserId));
         }
     }
 }

@@ -2,23 +2,39 @@
 {
     public static class ApiRoutes
     {
-        public const string Root = "api";
-        public const string Version = "v1";
+        private const string Root = "api";
+        private const string Version = "v1";
 
-        public const string Base = Root + "/" + Version;
+        private const string Base = Root + "/" + Version;
 
-        public static class Topics
+        public static class TopicsRoute
         {
+            private const string baseRoute = "/topic";
 
-            public const string Get = Base + "/topic";
+            public const string Get = Base + baseRoute;
 
-            public const string GetAll = Base + "/topics";
+            public const string GetList = Base + baseRoute + "s";
 
-            public const string Create = Base + "/topic";
+            public const string Create = Base + baseRoute;
 
-            public const string Update = Base + "/topic/{topicId}:Guid";
+            public const string Update = Base + baseRoute + "/{topicId}:Guid";
 
-            public const string Delete = Base + "/topic/{topicId}:Guid";
+            public const string Delete = Base + baseRoute + "/{topicId}:Guid";
+        }
+
+        public static class ParagraphRoute
+        {
+            private const string baseRoute = "/paragraph";
+
+            public const string Get = Base + baseRoute;
+
+            public const string GetList = Base + baseRoute + "s";
+
+            public const string Create = Base + baseRoute;
+
+            public const string Update = Base + baseRoute + "/{paragraphId}:Guid";
+
+            public const string Delete = Base + baseRoute + "/{paragraphId}:Guid";
         }
     }
 }
