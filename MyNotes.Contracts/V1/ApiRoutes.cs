@@ -36,5 +36,20 @@
 
             public const string Delete = Base + baseRoute + "/{paragraphId}:Guid";
         }
+
+        public static class NotesRoute
+        {
+            private const string baseRoute = "/note";
+
+            public const string Get = Base + baseRoute;
+
+            public const string GetList = Base + baseRoute + "s";
+
+            public const string Create = Base + baseRoute;
+
+            public const string Update = Base + baseRoute + "/{noteId}:Guid";
+
+            public const string Delete = Base + baseRoute + "/{noteId}:Guid";
+        }
     }
 }

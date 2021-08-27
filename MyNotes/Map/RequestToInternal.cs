@@ -18,6 +18,11 @@ namespace MyNotes.Map
             CreateMap<ParagraphCreateRequest, ParagraphCreate>();
             CreateMap<ParagraphUpdateRequest, ParagraphUpdate>();
 
+            CreateMap<MainEntityQuery, ByMainEntityFilter>();
+
+            CreateMap<NoteCreateRequest, NoteCreate>();
+            CreateMap<NoteUpdateRequest, NoteUpdate>();
+
         }
     }
 }

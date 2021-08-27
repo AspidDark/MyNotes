@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MyNotes.Services.Services
 {
-    public class NoteLogic
+    public class NoteLogic : INoteLogic
     {
         private readonly INoteContract _noteContract;
         private readonly IParagraphContract _paragraphContract;
@@ -213,7 +213,7 @@ namespace MyNotes.Services.Services
 
         private async Task<bool> IsMainEntityAccessAllowed(Guid mainEntityId, Guid userId)
         {
-            var paragraph= await _paragraphContract.Get(mainEntityId);
+            var paragraph = await _paragraphContract.Get(mainEntityId);
             if (paragraph is null)
             {
                 return false;
@@ -231,6 +231,6 @@ namespace MyNotes.Services.Services
             return (true, entity);
 
         }
-     
+
     }
 }
