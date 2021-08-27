@@ -1,4 +1,5 @@
 ﻿using MyNotes.Contracts.V1;
+using MyNotes.Domain.Entities.Core;
 using MyNotes.Services.InternalDto;
 using System;
 using System.Threading.Tasks;
@@ -12,5 +13,6 @@ namespace MyNotes.Services.ServiceContracts
         Task<BaseResponse> Get(ByEntityFilter entityByUserIdFilter);
         Task<BaseResponse> GetList(BaseUserIdFilter baseUserIdFilter, PaginationFilter paginationFilter);
         Task<BaseResponse> Update(TopicUpdate topicUpdate);
+        Task<bool> IsAccessAllowed(Topic topic, Guid userId);
     }
 }

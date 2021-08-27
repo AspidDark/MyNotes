@@ -11,6 +11,8 @@ namespace MyNotes.Services.Map
             CreateMap<Topic, TopicDto>();
 
             CreateMap<Paragraph, ParagraphDto>();
+
+            CreateMap<Note, NoteDto>();
         }
     }
 }

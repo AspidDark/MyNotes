@@ -13,64 +13,73 @@ using System.Threading.Tasks;
 
 namespace MyNotes.Services.Services
 {
-    public class ParagraphLogic : IParagraphLogic
+    public class NoteLogic
     {
+        private readonly INoteContract _noteContract;
         private readonly IParagraphContract _paragraphContract;
-        private readonly ITopicContract _topicContract;
-        private readonly ITopicLogic _topicLogic;
+        private readonly IParagraphLogic _paragraphLogic;
         private readonly IAccessToEntity _accessToEntity;
         private readonly IMapper _mapper;
-        private readonly ILogger<ParagraphLogic> _logger;
-        public ParagraphLogic(IParagraphContract paragraphContract,
-            ITopicContract topicContract,
+        private readonly ILogger<NoteLogic> _logger;
+
+        public NoteLogic(INoteContract noteContract,
+            IParagraphContract paragraphContract,
+            IParagraphLogic paragraphLogic,
             IAccessToEntity accessToEntity,
             IMapper mapper,
-            ILogger<ParagraphLogic> logger)
+            ILogger<NoteLogic> logger)
         {
+            _noteContract = noteContract;
             _paragraphContract = paragraphContract;
-            _topicContract = topicContract;
+            _paragraphLogic = paragraphLogic;
             _accessToEntity = accessToEntity;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<BaseResponse> Get(ByEntityFilter entityByUserIdFilter)
+
+        public async Task<BaseResponse> Get(ByMainEntityFilter filter)
         {
-            if (entityByUserIdFilter.EntityId == Guid.Empty)
+            if (filter.EntityId == Guid.Empty)
             {
                 return ErrorHelper.ErrorResult(Messages.entityIdEmpty);
             }
 
-            if (entityByUserIdFilter.UserId == Guid.Empty)
+            if (filter.MainEntityId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.mainEntityIdIsEmpty);
+            }
+
+            if (filter.UserId == Guid.Empty)
             {
                 return ErrorHelper.ErrorResult(Messages.userIdEmpty);
             }
 
             try
             {
-                var (result, paragraph) = await GetParagraph(entityByUserIdFilter.EntityId);
-                if (!result)
-                {
-                    return ErrorHelper.ErrorResult(Messages.noParagraph);
-                }
-
-                if (!await IsAccessAllowed(paragraph, entityByUserIdFilter.UserId))
+                if (!await IsMainEntityAccessAllowed(filter.MainEntityId, filter.UserId))
                 {
                     return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
 
-                var mapResult = _mapper.Map<ParagraphDto>(paragraph);
-                return new Response<ParagraphDto>(mapResult)
+                var (result, note) = await GetNote(filter.EntityId);
+                if (!result)
+                {
+                    return ErrorHelper.ErrorResult(Messages.noNote);
+                }
+
+                var mapResult = _mapper.Map<NoteDto>(note);
+
+                return new Response<NoteDto>(mapResult)
                 {
                     Result = true
                 };
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "10006");
+                _logger.LogError(e, "10011");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
-
         }
 
         public async Task<BaseResponse> GetList(ByEntityFilter filter, PaginationFilter paginationFilter)
@@ -86,155 +95,142 @@ namespace MyNotes.Services.Services
             }
             try
             {
-
                 if (!await IsMainEntityAccessAllowed(filter.EntityId, filter.UserId))
                 {
                     return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
-                var result = await _paragraphContract.GetListByTopic(filter.UserId, filter.EntityId,
+
+                var result = await _noteContract.GetListByParagraph(filter.UserId, filter.EntityId,
                     paginationFilter.PageSize,
                     paginationFilter.PageSize * paginationFilter.PageNumber);
 
-                var responseBody = _mapper.Map<List<ParagraphDto>>(result);
+                var responseBody = _mapper.Map<List<NoteDto>>(result);
 
-                return new Response<List<ParagraphDto>>(responseBody) { Result = true };
+                return new Response<List<NoteDto>>(responseBody) { Result = true };
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "10007");
+                _logger.LogError(e, "10012");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
         }
 
-        public async Task<BaseResponse> Create(ParagraphCreate paragraphCreate)
+        public async Task<BaseResponse> Create(NoteCreate noteCreate)
         {
-            if (paragraphCreate.UserId == Guid.Empty)
+            if (noteCreate.UserId == Guid.Empty)
             {
                 return ErrorHelper.ErrorResult(Messages.userIdEmpty);
             }
 
-            if (paragraphCreate.TopicId == Guid.Empty)
+            if (noteCreate.ParagraphId == Guid.Empty)
             {
-                return ErrorHelper.ErrorResult(Messages.topicIdEmpty);
+                return ErrorHelper.ErrorResult(Messages.paragraphEmpty);
             }
 
             try
             {
-                var entity = _mapper.Map<Paragraph>(paragraphCreate);
-                var result = await _paragraphContract.Add(entity);
+                var entity = _mapper.Map<Note>(noteCreate);
+                var result = await _noteContract.Add(entity);
                 return new BaseResponse { Result = result };
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "10008");
+                _logger.LogError(e, "10013");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
         }
 
-        public async Task<BaseResponse> Update(ParagraphUpdate entity)
+        public async Task<BaseResponse> Update(NoteUpdate entity)
         {
             if (entity.UserId == Guid.Empty)
             {
                 return ErrorHelper.ErrorResult(Messages.userIdEmpty);
             }
 
-            if (entity.ParagraphId == Guid.Empty)
+            if (entity.NoteId == Guid.Empty)
             {
-                return ErrorHelper.ErrorResult(Messages.paragraphEmpty);
+                return ErrorHelper.ErrorResult(Messages.noteIdEmpty);
             }
 
             try
             {
-                var (result, paragraph) = await GetParagraph(entity.ParagraphId);
+                var (result, note) = await GetNote(entity.NoteId);
                 if (!result)
                 {
-                    return ErrorHelper.ErrorResult(Messages.noParagraph);
+                    return ErrorHelper.ErrorResult(Messages.noNote);
                 }
-                if (!await IsAccessAllowed(paragraph, entity.UserId))
+
+                if (!await IsMainEntityAccessAllowed(note.ParagraphId, entity.UserId))
                 {
                     return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
-                paragraph.Name = entity.Name;
+                note.Message = entity.Message;
 
-                var upateResult = await _paragraphContract.Update(paragraph);
-                return new Response<Paragraph>(upateResult) { Result = true };
+                var upateResult = await _noteContract.Update(note);
+                return new Response<Note>(upateResult) { Result = true };
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "10009");
+                _logger.LogError(e, "10014");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
         }
 
-        public async Task<BaseResponse> Delete(Guid paragraphId, Guid userId)
+        public async Task<BaseResponse> Delete(Guid noteId, Guid userId)
         {
             if (userId == Guid.Empty)
             {
                 return ErrorHelper.ErrorResult(Messages.userIdEmpty);
             }
 
-            if (paragraphId == Guid.Empty)
+            if (noteId == Guid.Empty)
             {
-                return ErrorHelper.ErrorResult(Messages.paragraphEmpty);
+                return ErrorHelper.ErrorResult(Messages.noteIdEmpty);
             }
 
             try
             {
-                var (result, entity) = await GetParagraph(paragraphId);
+                var (result, entity) = await GetNote(noteId);
                 if (!result)
                 {
                     return ErrorHelper.ErrorResult(Messages.noParagraph);
                 }
 
-                if (!await IsAccessAllowed(entity, userId))
+                if (!await IsMainEntityAccessAllowed(entity.ParagraphId, userId))
                 {
                     return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
 
-                var deleteResult = await _paragraphContract.Remove(userId, paragraphId);
+                var deleteResult = await _noteContract.Remove(userId, noteId);
                 return new BaseResponse { Result = deleteResult };
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "10010");
+                _logger.LogError(e, "10015");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
         }
 
-        public async Task<bool> IsAccessAllowed(Paragraph entity, Guid userId)
-        {
-            if (entity.OwnerId != userId)
-            {
-                var userAccess = await _accessToEntity.CheckAccessToEntity(entity.OwnerId,
-                    userId, entity.Id);
-
-                if (userAccess == Domain.Enums.AccessType.Closed)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         private async Task<bool> IsMainEntityAccessAllowed(Guid mainEntityId, Guid userId)
         {
-            var topic = await _topicContract.Get(mainEntityId);
-            if (topic is null)
+            var paragraph= await _paragraphContract.Get(mainEntityId);
+            if (paragraph is null)
             {
                 return false;
             }
-            return await _topicLogic.IsAccessAllowed(topic, userId);
+            return await _paragraphLogic.IsAccessAllowed(paragraph, userId);
         }
 
-        private async Task<(bool, Paragraph)> GetParagraph(Guid paragraphId)
+        private async Task<(bool, Note)> GetNote(Guid noteId)
         {
-            var entity = await _paragraphContract.Get(paragraphId);
+            var entity = await _noteContract.Get(noteId);
             if (entity is null)
             {
                 return (false, null);
             }
             return (true, entity);
-        }
 
+        }
+     
     }
 }

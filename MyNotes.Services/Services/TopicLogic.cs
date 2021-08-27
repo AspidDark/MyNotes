@@ -32,7 +32,7 @@ namespace MyNotes.Services.Services
             _logger = logger;
         }
 
-        public async Task<Contracts.V1.BaseResponse> Get(ByEntityFilter entityByUserIdFilter)
+        public async Task<BaseResponse> Get(ByEntityFilter entityByUserIdFilter)
         {
             if (entityByUserIdFilter.EntityId == Guid.Empty)
             {
@@ -95,6 +95,11 @@ namespace MyNotes.Services.Services
 
         public async Task<BaseResponse> Create(TopicCreate topicCreate)
         {
+            if (topicCreate.UserId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.userIdEmpty);
+            }
+
             try
             {
                 var topic = _mapper.Map<Topic>(topicCreate);
@@ -110,6 +115,16 @@ namespace MyNotes.Services.Services
 
         public async Task<BaseResponse> Update(TopicUpdate topicUpdate)
         {
+            if (topicUpdate.UserId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.userIdEmpty);
+            }
+
+            if (topicUpdate.TopicId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.topicIdEmpty);
+            }
+
             try
             {
                 var (result, topic) = await GetTopic(topicUpdate.TopicId);
@@ -135,6 +150,16 @@ namespace MyNotes.Services.Services
 
         public async Task<BaseResponse> Delete(Guid topicId, Guid userId)
         {
+
+            if (userId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.userIdEmpty);
+            }
+
+            if (topicId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.topicIdEmpty);
+            }
             try
             {
                 var (result, topic) = await GetTopic(topicId);
@@ -158,18 +183,7 @@ namespace MyNotes.Services.Services
             }
         }
 
-        private async Task<(bool, Topic)> GetTopic(Guid topicId)
-        {
-            var topic = await _topicContract.Get(topicId);
-            if (topic is null)
-            {
-                return (false, null);
-            }
-            return (true, topic);
-
-        }
-
-        private async Task<bool> IsAccessAllowed(Topic topic, Guid userId)
+        public async Task<bool> IsAccessAllowed(Topic topic, Guid userId)
         {
             if (topic.OwnerId != userId)
             {
@@ -183,5 +197,17 @@ namespace MyNotes.Services.Services
             }
             return true;
         }
+
+        private async Task<(bool, Topic)> GetTopic(Guid topicId)
+        {
+            var topic = await _topicContract.Get(topicId);
+            if (topic is null)
+            {
+                return (false, null);
+            }
+            return (true, topic);
+
+        }
+
     }
 }

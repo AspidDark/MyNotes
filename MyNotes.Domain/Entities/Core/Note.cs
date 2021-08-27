@@ -5,7 +5,7 @@ namespace MyNotes.Domain.Entities.Core
 {
     public class Note : BaseNoteEntity
     {
-        [MaxLength(500)]
+        [MaxLength(1500)]
         public string Message { get; set; }
 
         public Guid ParagraphId { get; set; }

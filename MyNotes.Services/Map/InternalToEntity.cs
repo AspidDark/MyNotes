@@ -11,6 +11,8 @@ namespace MyNotes.Services.Map
             CreateMap<TopicCreate,Topic>().ForMember(dest=>dest.OwnerId, opt=>opt.MapFrom(src=>src.UserId));
 
             CreateMap<ParagraphCreate, Paragraph>().ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src=>src.UserId));
+
+            CreateMap<NoteCreate, Note>();
         }
     }
 }

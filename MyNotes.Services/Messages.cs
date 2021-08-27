@@ -15,5 +15,13 @@
         public const string somethingWentWrong = "Something Went wrong";
 
         public const string topicIdEmpty = "Topic id is empty";
+
+        public const string mainEntityIdIsEmpty = "Main Entity id is Empty";
+
+        public const string noNote = "No Note";
+
+        public const string paragraphEmpty = "Paragraph id Empty";
+
+        public const string noteIdEmpty = "Note id is empty";
     }
 }
