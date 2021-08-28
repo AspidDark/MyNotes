@@ -65,7 +65,7 @@ namespace MyNotes.Controllers
             return Ok(response);
         }
 
-        [HttpDelete(ApiRoutes.ParagraphRoute.Delete)]
+        [HttpDelete(ApiRoutes.NotesRoute.Delete)]
         public async Task<IActionResult> Delete([FromRoute] Guid noteId)
         {
             var result = await _noteLogic.Delete(noteId, HttpContext.GetUserId());

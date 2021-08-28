@@ -23,12 +23,14 @@ namespace MyNotes.Services.Services
         private readonly ILogger<ParagraphLogic> _logger;
         public ParagraphLogic(IParagraphContract paragraphContract,
             ITopicContract topicContract,
+            ITopicLogic topicLogic,
             IAccessToEntity accessToEntity,
             IMapper mapper,
             ILogger<ParagraphLogic> logger)
         {
             _paragraphContract = paragraphContract;
             _topicContract = topicContract;
+            _topicLogic = topicLogic;
             _accessToEntity = accessToEntity;
             _mapper = mapper;
             _logger = logger;

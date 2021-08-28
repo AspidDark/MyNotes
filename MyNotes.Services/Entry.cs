@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using MyNotes.Services.ServiceContracts;
 using MyNotes.Services.Services;
-using AutoMapper;
 
 namespace MyNotes.Services
 {
@@ -14,6 +13,7 @@ namespace MyNotes.Services
             services.AddScoped<IAccessToEntity, AccessToEntity>();
             services.AddScoped<ITopicLogic, TopicLogic>();
             services.AddScoped<IParagraphLogic, ParagraphLogic>();
+            services.AddScoped<INoteLogic, NoteLogic>();
             return services;
         }
     }

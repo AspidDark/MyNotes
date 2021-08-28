@@ -12,7 +12,7 @@ namespace MyNotes.Services.Map
 
             CreateMap<ParagraphCreate, Paragraph>().ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src=>src.UserId));
 
-            CreateMap<NoteCreate, Note>();
+            CreateMap<NoteCreate, Note>().ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src => src.UserId));
         }
     }
 }
