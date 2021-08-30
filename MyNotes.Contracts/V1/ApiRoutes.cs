@@ -51,5 +51,18 @@
 
             public const string Delete = Base + baseRoute + "/{noteId}:Guid";
         }
+
+        public static class FileRoute
+        {
+            private const string baseRoute = "/file";
+
+            public const string Get = Base + baseRoute;
+
+            public const string Create = Base + baseRoute;
+
+            public const string Update = Base + baseRoute + "/{fileId}:Guid";
+
+            public const string Delete = Base + baseRoute + "/{fileId}:Guid";
+        }
     }
 }

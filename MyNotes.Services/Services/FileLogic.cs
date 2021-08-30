@@ -8,13 +8,12 @@ using MyNotes.Services.Helpers;
 using MyNotes.Services.InternalDto;
 using MyNotes.Services.ServiceContracts;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
 namespace MyNotes.Services.Services
 {
-    public class FileLogic
+    public class FileLogic : IFileLogic
     {
         private readonly IFileEntityContract _fileEntityContract;
         private readonly IParagraphContract _paragraphContract;
@@ -73,7 +72,7 @@ namespace MyNotes.Services.Services
                 var response = _mapper.Map<FileEntityResponseDto>(fileData);
                 response.FileEntity = fileSream;
 
-                return new Response<FileEntityResponseDto>(response) { Result=true };
+                return new Response<FileEntityResponseDto>(response) { Result = true };
 
             }
             catch (Exception e)
@@ -118,21 +117,21 @@ namespace MyNotes.Services.Services
                 }
 
                 FileEntity fileEntity = new()
-                { 
-                    FileName= fileName,
-                    Id= Guid.NewGuid(),
+                {
+                    FileName = fileName,
+                    Id = Guid.NewGuid(),
                     OwnerId = request.UserId,
-                    ParagraphId=request.ParagraphId,
+                    ParagraphId = request.ParagraphId,
                     SavedFileName = fileSaveName
                 };
 
-                var saveResult =  await _fileEntityContract.Add(fileEntity);
+                var saveResult = await _fileEntityContract.Add(fileEntity);
                 if (!saveResult)
                 {
                     return ErrorHelper.ErrorResult(Messages.fileEntitySaveError);
                 }
 
-                return new Response<Guid>(fileEntity.Id) {Result=true };
+                return new Response<Guid>(fileEntity.Id) { Result = true };
             }
             catch (Exception e)
             {
@@ -213,7 +212,8 @@ namespace MyNotes.Services.Services
 
                 var deleteResult = await _fileEntityContract.Remove(userId, fileId);
 
-                var deleteFileResult = await _fileHelper.DeleteFile(entity.SavedFileName);
+                var deleteTask = Task.Factory.StartNew(() => _fileHelper.DeleteFile(entity.SavedFileName));
+                //deleteTask.Wait();
 
                 return new BaseResponse { Result = deleteResult };
             }

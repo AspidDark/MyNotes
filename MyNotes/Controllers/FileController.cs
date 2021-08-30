@@ -9,46 +9,34 @@ using MyNotes.Services.InternalDto;
 using MyNotes.Extensions;
 using MyNotes.Services.ServiceContracts;
 
-
 namespace MyNotes.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class NotesController : ControllerBase
+    public class FileController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly INoteLogic _noteLogic;
+        private readonly IFileLogic _fileLogic;
 
-        public NotesController(IMapper mapper, INoteLogic noteLogic)
+        public FileController(IMapper mapper,
+            IFileLogic fileLogic)
         {
             _mapper = mapper;
-            _noteLogic = noteLogic;
+            _fileLogic = fileLogic;
         }
 
-        [HttpGet(ApiRoutes.NotesRoute.Get)]
+        [HttpGet(ApiRoutes.FileRoute.Get)]
         public async Task<IActionResult> Get([FromQuery] MainEntityQuery query)
         {
             //Validate here
             var entityByUserIdfilter = _mapper.Map<ByMainEntityFilter>(query);
             entityByUserIdfilter.UserId = HttpContext.GetUserId();
-            var response = await _noteLogic.Get(entityByUserIdfilter);
+            var response = await _fileLogic.Get(entityByUserIdfilter);
+            
             return Ok(response);
         }
 
-        [HttpGet(ApiRoutes.NotesRoute.GetList)]
-        public async Task<IActionResult> GetAll([FromQuery] PaginationQuery paginationQuery, [FromQuery] Guid paragraphId)
-        {
-            ByEntityFilter userIdFilter = new()
-            {
-                UserId = HttpContext.GetUserId(),
-                EntityId = paragraphId
-            };
-            var paginationfilter = _mapper.Map<PaginationFilter>(paginationQuery);
-            var response = await _noteLogic.GetList(userIdFilter, paginationfilter);
-            return Ok(response);
-        }
-
-        [HttpPost(ApiRoutes.NotesRoute.Create)]
+        [HttpPost(ApiRoutes.FileRoute.Create)]
         public async Task<IActionResult> Create([FromBody] NoteCreateRequest request)
         {
             var topicCreate = _mapper.Map<NoteCreate>(request);
@@ -57,7 +45,7 @@ namespace MyNotes.Controllers
             return Ok(response);
         }
 
-        [HttpPut(ApiRoutes.NotesRoute.Update)]
+        [HttpPut(ApiRoutes.FileRoute.Update)]
         public async Task<IActionResult> Update([FromRoute] Guid noteId, [FromBody] NoteUpdateRequest request)
         {
             var topicUpdate = _mapper.Map<NoteUpdate>(request);
@@ -67,7 +55,7 @@ namespace MyNotes.Controllers
             return Ok(response);
         }
 
-        [HttpDelete(ApiRoutes.NotesRoute.Delete)]
+        [HttpDelete(ApiRoutes.FileRoute.Delete)]
         public async Task<IActionResult> Delete([FromRoute] Guid noteId)
         {
             var result = await _noteLogic.Delete(noteId, HttpContext.GetUserId());
