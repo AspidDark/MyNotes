@@ -18,25 +18,21 @@ namespace MyNotes.Services.Services
         private readonly INoteContract _noteContract;
         private readonly IParagraphContract _paragraphContract;
         private readonly IParagraphLogic _paragraphLogic;
-        private readonly IAccessToEntity _accessToEntity;
         private readonly IMapper _mapper;
         private readonly ILogger<NoteLogic> _logger;
 
         public NoteLogic(INoteContract noteContract,
             IParagraphContract paragraphContract,
             IParagraphLogic paragraphLogic,
-            IAccessToEntity accessToEntity,
             IMapper mapper,
             ILogger<NoteLogic> logger)
         {
             _noteContract = noteContract;
             _paragraphContract = paragraphContract;
             _paragraphLogic = paragraphLogic;
-            _accessToEntity = accessToEntity;
             _mapper = mapper;
             _logger = logger;
         }
-
 
         public async Task<BaseResponse> Get(ByMainEntityFilter filter)
         {
@@ -125,6 +121,11 @@ namespace MyNotes.Services.Services
             if (noteCreate.ParagraphId == Guid.Empty)
             {
                 return ErrorHelper.ErrorResult(Messages.paragraphEmpty);
+            }
+
+            if (!await IsMainEntityAccessAllowed(noteCreate.ParagraphId, noteCreate.UserId))
+            {
+                return ErrorHelper.ErrorResult(Messages.noAccess);
             }
 
             try
@@ -231,6 +232,5 @@ namespace MyNotes.Services.Services
             return (true, entity);
 
         }
-
     }
 }

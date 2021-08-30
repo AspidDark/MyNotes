@@ -120,6 +120,11 @@ namespace MyNotes.Services.Services
                 return ErrorHelper.ErrorResult(Messages.topicIdEmpty);
             }
 
+            if (!await IsMainEntityAccessAllowed(paragraphCreate.TopicId, paragraphCreate.UserId))
+            {
+                return ErrorHelper.ErrorResult(Messages.noAccess);
+            }
+
             try
             {
                 var entity = _mapper.Map<Paragraph>(paragraphCreate);

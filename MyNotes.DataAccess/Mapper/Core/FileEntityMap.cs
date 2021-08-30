@@ -13,7 +13,9 @@ namespace MyNotes.DataAccess.Mapper.Core
             base.Configure(builder);
             builder.Property(x => x.ParagraphId).HasColumnName("paragraph_id").IsRequired();
             builder.HasOne<Paragraph>(c => c.Paragraph).WithMany().HasForeignKey(x => x.ParagraphId);
-            builder.Property(x => x.Path).HasColumnName("path");
+            builder.Property(x => x.SavedFileName).HasColumnName("saved_file_name");
+            builder.Property(x => x.Explanation).HasColumnName("explanation");
+
         }
     }
 }

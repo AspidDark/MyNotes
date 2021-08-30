@@ -6,6 +6,15 @@ namespace MyNotes.Domain.Entities.Core
     {
         public Guid ParagraphId { get; set; }
         public Paragraph Paragraph { get; set; }
-        public string Path { get; set; }
+        public string  Explanation { get; set; }
+        /// <summary>
+        /// Name of file given by user
+        /// </summary>
+        public string FileName { get; set; }
+
+        /// <summary>
+        /// File on Disc name
+        /// </summary>
+        public string SavedFileName { get; set; }
     }
 }

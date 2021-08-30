@@ -23,5 +23,13 @@
         public const string paragraphEmpty = "Paragraph id Empty";
 
         public const string noteIdEmpty = "Note id is empty";
+
+        public const string fileSaveError = "File save error";
+
+        public const string fileEntitySaveError = "File Entity save Error";
+
+        public const string fileMissing = "File Missing";
+
+        public const string fileIdEmpty = "File id is Empty";
     }
 }

@@ -13,6 +13,8 @@ namespace MyNotes.Services.Map
             CreateMap<Paragraph, ParagraphDto>();
 
             CreateMap<Note, NoteDto>();
+
+            CreateMap<FileEntity, FileEntityResponseDto>();
         }
     }
 }
