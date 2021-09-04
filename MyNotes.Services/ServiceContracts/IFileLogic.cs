@@ -10,6 +10,8 @@ namespace MyNotes.Services.ServiceContracts
         Task<BaseResponse> Create(FileCreate request);
         Task<BaseResponse> Delete(Guid fileId, Guid userId);
         Task<BaseResponse> Get(ByMainEntityFilter filter);
-        Task<BaseResponse> Update(FileUpdate request);
+        Task<BaseResponse> CreateOrUpdateMessage(FileMessageUpdate request);
+        Task<BaseResponse> GetMesage(ByMainEntityFilter filter);
+        Task<BaseResponse> DeleteMessage(Guid fileId, Guid userId);
     }
 }

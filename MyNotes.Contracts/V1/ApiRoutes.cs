@@ -60,7 +60,16 @@
 
             public const string Create = Base + baseRoute;
 
-            public const string Update = Base + baseRoute + "/{fileId}:Guid";
+            public const string Delete = Base + baseRoute + "/{fileId}:Guid";
+        }
+
+        public static class FileMessageRoute
+        {
+            private const string baseRoute = "/fileMessage";
+
+            public const string Get = Base + baseRoute;
+
+            public const string Create = Base + baseRoute;
 
             public const string Delete = Base + baseRoute + "/{fileId}:Guid";
         }

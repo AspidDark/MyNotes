@@ -2,7 +2,7 @@
 
 namespace MyNotes.Services.InternalDto
 {
-    public class FileUpdate
+    public class FileMessageUpdate
     {
         /// <summary>
         /// Id пользователя

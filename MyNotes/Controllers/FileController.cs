@@ -32,33 +32,55 @@ namespace MyNotes.Controllers
             var entityByUserIdfilter = _mapper.Map<ByMainEntityFilter>(query);
             entityByUserIdfilter.UserId = HttpContext.GetUserId();
             var response = await _fileLogic.Get(entityByUserIdfilter);
-            
             return Ok(response);
         }
 
         [HttpPost(ApiRoutes.FileRoute.Create)]
-        public async Task<IActionResult> Create([FromBody] NoteCreateRequest request)
+        public async Task<IActionResult> Create([FromBody] FileCreateRequest request)
         {
-            var topicCreate = _mapper.Map<NoteCreate>(request);
-            topicCreate.UserId = HttpContext.GetUserId();
-            var response = await _noteLogic.Create(topicCreate);
-            return Ok(response);
-        }
-
-        [HttpPut(ApiRoutes.FileRoute.Update)]
-        public async Task<IActionResult> Update([FromRoute] Guid noteId, [FromBody] NoteUpdateRequest request)
-        {
-            var topicUpdate = _mapper.Map<NoteUpdate>(request);
-            topicUpdate.UserId = HttpContext.GetUserId();
-            topicUpdate.NoteId = noteId;
-            var response = await _noteLogic.Update(topicUpdate);
+            FileCreate fileCreate = new()
+            {
+                UserId = HttpContext.GetUserId(),
+                FileBody=request.FileBody,
+                ParagraphId=request.ParagraphId
+            };
+            var response = await _fileLogic.Create(fileCreate);
             return Ok(response);
         }
 
         [HttpDelete(ApiRoutes.FileRoute.Delete)]
-        public async Task<IActionResult> Delete([FromRoute] Guid noteId)
+        public async Task<IActionResult> Delete([FromRoute] Guid fileId)
         {
-            var result = await _noteLogic.Delete(noteId, HttpContext.GetUserId());
+            var result = await _fileLogic.Delete(fileId, HttpContext.GetUserId());
+            return Ok(result);
+        }
+
+
+
+        [HttpGet(ApiRoutes.FileMessageRoute.Get)]
+        public async Task<IActionResult> GetFileMessage([FromQuery] MainEntityQuery query)
+        {
+            //Validate here
+            var entityByUserIdfilter = _mapper.Map<ByMainEntityFilter>(query);
+            entityByUserIdfilter.UserId = HttpContext.GetUserId();
+            var response = await _fileLogic.GetMesage(entityByUserIdfilter);
+            return Ok(response);
+        }
+
+
+        [HttpPost(ApiRoutes.FileMessageRoute.Create)]
+        public async Task<IActionResult> CreateFileMessage([FromBody] FileMessageUpdateRequest request)
+        {
+            var fileMessageUpdate = _mapper.Map<FileMessageUpdate>(request);
+            fileMessageUpdate.UserId = HttpContext.GetUserId();
+            var response = await _fileLogic.CreateOrUpdateMessage(fileMessageUpdate);
+            return Ok(response);
+        }
+
+        [HttpDelete(ApiRoutes.FileMessageRoute.Delete)]
+        public async Task<IActionResult> DeleteMessage([FromRoute] Guid fileId)
+        {
+            var result = await _fileLogic.DeleteMessage(fileId, HttpContext.GetUserId());
             return Ok(result);
         }
     }

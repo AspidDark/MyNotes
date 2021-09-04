@@ -140,51 +140,6 @@ namespace MyNotes.Services.Services
             }
         }
 
-        public async Task<BaseResponse> Update(FileUpdate request)
-        {
-            if (request.UserId == Guid.Empty)
-            {
-                return ErrorHelper.ErrorResult(Messages.userIdEmpty);
-            }
-
-            if (request.ParagraphId == Guid.Empty)
-            {
-                return ErrorHelper.ErrorResult(Messages.paragraphEmpty);
-            }
-
-            if (request.FileId == Guid.Empty)
-            {
-                return ErrorHelper.ErrorResult(Messages.fileIdEmpty);
-            }
-
-            if (!await IsMainEntityAccessAllowed(request.ParagraphId, request.UserId))
-            {
-                return ErrorHelper.ErrorResult(Messages.noAccess);
-            }
-
-            try
-            {
-                var (result, fileData) = await GetFileData(request.FileId);
-                if (!result)
-                {
-                    return ErrorHelper.ErrorResult(Messages.fileMissing);
-                }
-
-                fileData.Explanation = request.Explanation;
-
-                var upateResult = await _fileEntityContract.Update(fileData);
-
-                //TODO Remove redundant fields from response
-                return new Response<FileEntity>(upateResult) { Result = true };
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "10018");
-                return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
-            }
-
-        }
-
         public async Task<BaseResponse> Delete(Guid fileId, Guid userId)
         {
             if (userId == Guid.Empty)
@@ -220,6 +175,144 @@ namespace MyNotes.Services.Services
             catch (Exception e)
             {
                 _logger.LogError(e, "10019");
+                return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
+            }
+        }
+
+        /// <summary>
+        /// Only picrure explanation message row already exists
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<BaseResponse> CreateOrUpdateMessage(FileMessageUpdate request)
+        {
+            if (request.UserId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.userIdEmpty);
+            }
+
+            if (request.ParagraphId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.paragraphEmpty);
+            }
+
+            if (request.FileId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.fileIdEmpty);
+            }
+
+            if (!await IsMainEntityAccessAllowed(request.ParagraphId, request.UserId))
+            {
+                return ErrorHelper.ErrorResult(Messages.noAccess);
+            }
+
+            try
+            {
+                var (result, fileData) = await GetFileData(request.FileId);
+                if (!result)
+                {
+                    return ErrorHelper.ErrorResult(Messages.fileMissing);
+                }
+
+                fileData.Explanation = request.Explanation;
+
+                var upateResult = await _fileEntityContract.Update(fileData);
+
+                FileMessageResponseDto response = new()
+                {
+                    Id=upateResult.Id,
+                    ParagraphId= upateResult.ParagraphId,
+                    Message= upateResult.Explanation
+                };
+
+                return new Response<FileMessageResponseDto>(response) { Result = true };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "10020");
+                return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
+            }
+
+        }
+
+        public async Task<BaseResponse> GetMesage(ByMainEntityFilter filter)
+        {
+            if (filter.EntityId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.entityIdEmpty);
+            }
+
+            if (filter.MainEntityId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.mainEntityIdIsEmpty);
+            }
+
+            if (filter.UserId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.userIdEmpty);
+            }
+
+            try
+            {
+                if (!await IsMainEntityAccessAllowed(filter.MainEntityId, filter.UserId))
+                {
+                    return ErrorHelper.ErrorResult(Messages.noAccess);
+                }
+
+                var (result, fileData) = await GetFileData(filter.EntityId);
+                if (!result)
+                {
+                    return ErrorHelper.ErrorResult(Messages.fileMissing);
+                }
+                FileMessageResponseDto response = new ()
+                { 
+                    Id=fileData.Id,
+                    ParagraphId = fileData.ParagraphId,
+                    Message= fileData.Explanation
+                };
+
+                return new Response<FileMessageResponseDto>(response) { Result = true };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "10021");
+                return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
+            }
+        }
+
+        public async Task<BaseResponse> DeleteMessage(Guid fileId, Guid userId)
+        {
+            if (userId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.userIdEmpty);
+            }
+
+            if (fileId == Guid.Empty)
+            {
+                return ErrorHelper.ErrorResult(Messages.noteIdEmpty);
+            }
+
+            try
+            {
+                var (result, entity) = await GetFileData(fileId);
+                if (!result)
+                {
+                    return ErrorHelper.ErrorResult(Messages.fileMissing);
+                }
+
+                if (!await IsMainEntityAccessAllowed(entity.ParagraphId, userId))
+                {
+                    return ErrorHelper.ErrorResult(Messages.noAccess);
+                }
+                entity.Explanation = string.Empty;
+
+                var deleteResult = await _fileEntityContract.Update(entity);
+
+                return new BaseResponse { Result = string.IsNullOrWhiteSpace(deleteResult.Explanation) };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "10022");
                 return ErrorHelper.ErrorResult(Messages.somethingWentWrong);
             }
         }

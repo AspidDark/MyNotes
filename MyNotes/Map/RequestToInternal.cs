@@ -23,6 +23,9 @@ namespace MyNotes.Map
             CreateMap<NoteCreateRequest, NoteCreate>();
             CreateMap<NoteUpdateRequest, NoteUpdate>();
 
+            CreateMap<FileMessageUpdateRequest, FileMessageUpdate>()
+                .ForMember(dest => dest.Explanation, opt => opt.MapFrom(src => src.Message));
+
         }
     }
 }
