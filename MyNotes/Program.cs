@@ -12,6 +12,7 @@ namespace MyNotes
     public class Program
     {
         //https://sankhadip.medium.com/how-to-upload-files-in-net-core-web-api-and-react-36a8fbf5c9e8
+        //https://www.youtube.com/watch?v=s0Lenn0XKho
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
