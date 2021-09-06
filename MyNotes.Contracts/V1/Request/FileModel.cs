@@ -3,9 +3,11 @@ using System;
 
 namespace MyNotes.Contracts.V1.Request
 {
-    public class FileCreateRequest
+    public class FileModel
     {
-        public IFormFile FileBody { get; set; }
+        public string FileName { get; set; }
+
+        public IFormFile FormFile { get; set; }
 
         public Guid ParagraphId { get; set; }
     }

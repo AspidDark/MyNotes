@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using MyNotes.DataAccess;
 using MyNotes.HealthCheck;
@@ -39,6 +40,31 @@ namespace MyNotes
         {
             services.AddControllers();
 
+            //services.AddCors();
+            //+Front
+            //services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            //{
+            //    builder.AllowAnyOrigin()
+            //           .AllowAnyMethod()
+            //           .AllowAnyHeader();
+            //}));
+
+
+            //services.AddCors();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Policy1", builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                    .WithMethods("POST", "GET", "PUT", "DELETE")
+                    .WithHeaders(HeaderNames.ContentType);
+                });
+            });
+            //-Front
+
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyNotes", Version = "v1" });
@@ -63,6 +89,14 @@ namespace MyNotes
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //+Front
+
+           // app.UseCors("MyPolicy");
+            //app.UseCors();
+
+            //app.UseCors("Policy1");
+
+            //-Front
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -72,6 +106,8 @@ namespace MyNotes
 
             app.UseHealthChecks("/health", HealthCheckConfiguration.DefaultRules());
             app.UseHealthChecks("/health/full", HealthCheckConfiguration.FullRules());
+
+            app.UseCors("Policy1");
 
             app.UseHttpsRedirection();
 
