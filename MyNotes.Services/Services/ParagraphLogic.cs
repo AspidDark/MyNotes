@@ -128,8 +128,8 @@ namespace MyNotes.Services.Services
             try
             {
                 var entity = _mapper.Map<Paragraph>(paragraphCreate);
-                var result = await _paragraphContract.Add(entity);
-                return new BaseResponse { Result = result };
+                var resultEntity = await _paragraphContract.Add(entity);
+                return new Response<AddEntityResponseDto>(new AddEntityResponseDto { Id = resultEntity.Id }) {Result= resultEntity.Result };
             }
             catch (Exception e)
             {

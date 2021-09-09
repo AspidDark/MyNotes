@@ -103,8 +103,8 @@ namespace MyNotes.Services.Services
             try
             {
                 var topic = _mapper.Map<Topic>(topicCreate);
-                var result = await _topicContract.Add(topic);
-                return new BaseResponse { Result = result };
+                var resultEntity = await _topicContract.Add(topic);
+                return new Response<AddEntityResponseDto>(new AddEntityResponseDto { Id = resultEntity.Id }) { Result = resultEntity.Result };
             }
             catch (Exception e)
             {

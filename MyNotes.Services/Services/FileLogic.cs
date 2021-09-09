@@ -126,12 +126,12 @@ namespace MyNotes.Services.Services
                 };
 
                 var saveResult = await _fileEntityContract.Add(fileEntity);
-                if (!saveResult)
+                if (!saveResult.Result)
                 {
                     return ErrorHelper.ErrorResult(Messages.fileEntitySaveError);
                 }
 
-                return new Response<Guid>(fileEntity.Id) { Result = true };
+                return new Response<AddEntityResponseDto>(new AddEntityResponseDto { Id = saveResult.Id }) { Result = saveResult.Result };
             }
             catch (Exception e)
             {

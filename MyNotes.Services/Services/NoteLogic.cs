@@ -131,8 +131,8 @@ namespace MyNotes.Services.Services
             try
             {
                 var entity = _mapper.Map<Note>(noteCreate);
-                var result = await _noteContract.Add(entity);
-                return new BaseResponse { Result = result };
+                var resultEntity = await _noteContract.Add(entity);
+                return new Response<AddEntityResponseDto>(new AddEntityResponseDto { Id = resultEntity.Id }) { Result = resultEntity.Result };
             }
             catch (Exception e)
             {

@@ -24,7 +24,10 @@ namespace MyNotes.DataAccess.Services
         {
             try
             {
-                t.Id = Guid.NewGuid();
+                if (t.Id == Guid.Empty)
+                { 
+                    t.Id = Guid.NewGuid();
+                }
                 t.CreateDate = DateTime.Now;
                 t.EditDate = DateTime.Now;
                 await _appDbContext.Set<T>().AddAsync(t);
