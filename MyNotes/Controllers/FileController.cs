@@ -10,6 +10,7 @@ using MyNotes.Extensions;
 using MyNotes.Services.ServiceContracts;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using MyNotes.Contracts.V1.Response;
 
 namespace MyNotes.Controllers
 {
@@ -35,6 +36,14 @@ namespace MyNotes.Controllers
             var entityByUserIdfilter = _mapper.Map<ByMainEntityFilter>(query);
             entityByUserIdfilter.UserId = HttpContext.GetUserId();
             var response = await _fileLogic.Get(entityByUserIdfilter);
+            if (response.Result)
+            {
+                var fileStreamResponse = response as Response<FileEntityResponseDto>;
+                return new FileStreamResult(fileStreamResponse.Data.FileEntity, "application/octet-stream")
+                {
+                    FileDownloadName= fileStreamResponse.Data.FileName
+                };
+            }
             return Ok(response);
         }
 
@@ -57,8 +66,6 @@ namespace MyNotes.Controllers
             var result = await _fileLogic.Delete(fileId, HttpContext.GetUserId());
             return Ok(result);
         }
-
-
 
         [HttpGet(ApiRoutes.FileMessageRoute.Get)]
         public async Task<IActionResult> GetFileMessage([FromQuery] MainEntityQuery query)
