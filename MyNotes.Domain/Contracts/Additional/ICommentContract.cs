@@ -1,4 +1,5 @@
-﻿using MyNotes.Domain.Entities.Additional;
+﻿using MyNotes.Domain.Dto;
+using MyNotes.Domain.Entities.Additional;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace MyNotes.Domain.Contracts.Additional
     {
         Task<Comment> Get(Guid id);
 
-        Task<bool> Add(Comment entity);
+        Task<EntityAdd> Add(Comment entity);
 
         Task<bool> Remove(Guid ownerId, Guid id);
 

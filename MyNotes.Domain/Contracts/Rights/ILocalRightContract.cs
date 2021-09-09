@@ -1,4 +1,5 @@
-﻿using MyNotes.Domain.Entities.Rights;
+﻿using MyNotes.Domain.Dto;
+using MyNotes.Domain.Entities.Rights;
 using MyNotes.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace MyNotes.Domain.Contracts.Rights
     public interface ILocalRightContract
     {
         Task<LocalRight> Get(Guid rightId);
-        Task<bool> Add(LocalRight entity);
+        Task<EntityAdd> Add(LocalRight entity);
 
         Task<bool> Remove(Guid ownerId, Guid id);
 

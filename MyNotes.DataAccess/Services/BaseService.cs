@@ -1,4 +1,5 @@
-﻿using MyNotes.Domain.Entities;
+﻿using MyNotes.Domain.Dto;
+using MyNotes.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +20,21 @@ namespace MyNotes.DataAccess.Services
             _appDbContext.Set<T>().FirstOrDefault(x => x.Id == id);
 
 
-        public virtual async Task<bool> Add(T t)
+        public virtual async Task<EntityAdd> Add(T t)
         {
-            t.Id = Guid.NewGuid();
-            t.CreateDate = DateTime.Now;
-            t.EditDate = DateTime.Now;
-            await _appDbContext.Set<T>().AddAsync(t);
-            var result = await _appDbContext.SaveChangesAsync();
-            return result > 0;
+            try
+            {
+                t.Id = Guid.NewGuid();
+                t.CreateDate = DateTime.Now;
+                t.EditDate = DateTime.Now;
+                await _appDbContext.Set<T>().AddAsync(t);
+                var result = await _appDbContext.SaveChangesAsync();
+                return new EntityAdd { Result = result > 0, Id = t.Id };
+            }
+            catch (Exception ex)
+            { 
+                return new EntityAdd {Result=false };
+            }
         }
 
         public virtual async Task<bool> Remove(Guid ownerId, Guid id)

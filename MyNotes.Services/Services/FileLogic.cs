@@ -103,13 +103,13 @@ namespace MyNotes.Services.Services
             {
                 //имя файла
                 var fileName = request.FileBody.FileName;
-                var name = request.FileBody.Name;
+               // var name = request.FileBody.Name;
                 //Расширенеи файла
-                string ext = System.IO.Path.GetExtension(name);
+                string ext = System.IO.Path.GetExtension(fileName);
                 var fileId = Guid.NewGuid();
 
                 //Имя файла для сохранения
-                string fileSaveName = fileName + fileId.ToString() + "." + ext;
+                string fileSaveName = fileId.ToString()+fileName;
 
                 if (!await _fileHelper.SaveFile(request.FileBody, fileSaveName))
                 {
@@ -119,7 +119,7 @@ namespace MyNotes.Services.Services
                 FileEntity fileEntity = new()
                 {
                     FileName = fileName,
-                    Id = Guid.NewGuid(),
+                    Id = fileId,
                     OwnerId = request.UserId,
                     ParagraphId = request.ParagraphId,
                     SavedFileName = fileSaveName
