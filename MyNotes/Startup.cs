@@ -58,7 +58,8 @@ namespace MyNotes
                 {
                     builder.WithOrigins("http://localhost:3000")
                     .WithMethods("POST", "GET", "PUT", "DELETE")
-                    .WithHeaders(HeaderNames.ContentType);
+                    .WithHeaders(HeaderNames.ContentType)
+                    .WithExposedHeaders("Content-Disposition");
                 });
             });
             //-Front
