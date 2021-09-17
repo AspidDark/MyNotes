@@ -19,7 +19,7 @@
 
             public const string Update = Base + baseRoute + "/{topicId}:Guid";
 
-            public const string Delete = Base + baseRoute + "/{topicId}:Guid";
+            public const string Delete = Base + baseRoute + "/{topicId}";
         }
 
         public static class ParagraphRoute
@@ -34,7 +34,7 @@
 
             public const string Update = Base + baseRoute + "/{paragraphId}:Guid";
 
-            public const string Delete = Base + baseRoute + "/{paragraphId}:Guid";
+            public const string Delete = Base + baseRoute + "/{paragraphId}";
         }
 
         public static class NotesRoute
@@ -49,7 +49,7 @@
 
             public const string Update = Base + baseRoute + "/{noteId}:Guid";
 
-            public const string Delete = Base + baseRoute + "/{noteId}:Guid";
+            public const string Delete = Base + baseRoute + "/{noteId}";
         }
 
         public static class FileRoute
@@ -71,7 +71,7 @@
 
             public const string Create = Base + baseRoute;
 
-            public const string Delete = Base + baseRoute + "/{fileId}:Guid";
+            public const string Delete = Base + baseRoute + "/{fileId}";
         }
     }
 }
