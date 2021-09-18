@@ -17,7 +17,7 @@
 
             public const string Create = Base + baseRoute;
 
-            public const string Update = Base + baseRoute + "/{topicId}:Guid";
+            public const string Update = Base + baseRoute + "/{topicId}";
 
             public const string Delete = Base + baseRoute + "/{topicId}";
         }
@@ -32,7 +32,7 @@
 
             public const string Create = Base + baseRoute;
 
-            public const string Update = Base + baseRoute + "/{paragraphId}:Guid";
+            public const string Update = Base + baseRoute + "/{paragraphId}";
 
             public const string Delete = Base + baseRoute + "/{paragraphId}";
         }
@@ -47,7 +47,7 @@
 
             public const string Create = Base + baseRoute;
 
-            public const string Update = Base + baseRoute + "/{noteId}:Guid";
+            public const string Update = Base + baseRoute + "/{noteId}";
 
             public const string Delete = Base + baseRoute + "/{noteId}";
         }
@@ -60,7 +60,7 @@
 
             public const string Create = Base + baseRoute;
 
-            public const string Delete = Base + baseRoute + "/{fileId}:Guid";
+            public const string Delete = Base + baseRoute + "/{fileId}";
         }
 
         public static class FileMessageRoute
