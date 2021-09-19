@@ -3,7 +3,7 @@ using System;
 
 namespace MyNotes.Domain.Entities.Rights
 {
-    public class LocalRight : BaseNoteEntity
+    public class LocalRight : BaseEntity
     {
         public Guid AllowedUserId { get; set; }
 

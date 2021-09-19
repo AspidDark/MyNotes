@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyNotes.Domain.Entities.Core
 {
-    public class Note : BaseNoteEntity
+    public class Note : BaseEntity
     {
         [MaxLength(1500)]
         public string Message { get; set; }

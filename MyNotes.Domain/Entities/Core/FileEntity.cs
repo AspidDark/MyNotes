@@ -2,7 +2,7 @@
 
 namespace MyNotes.Domain.Entities.Core
 {
-    public class FileEntity : BaseNoteEntity
+    public class FileEntity : BaseEntity
     {
         public Guid ParagraphId { get; set; }
         public Paragraph Paragraph { get; set; }

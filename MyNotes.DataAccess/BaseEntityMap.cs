@@ -4,7 +4,7 @@ using MyNotes.Domain.Entities;
 
 namespace MyNotes.DataAccess
 {
-    public abstract class BaseEntityMap<T> : IEntityTypeConfiguration<T> where T : BaseNoteEntity
+    public abstract class BaseEntityMap<T> : IEntityTypeConfiguration<T> where T : BaseEntity
     {
         private readonly string _tableName;
         public BaseEntityMap(string tableName)

@@ -2,12 +2,10 @@
 
 namespace MyNotes.Contracts.V1.Response
 {
-    public class ParagraphDto
+    public class ParagraphDto : BaseResponseDto
     {
         public string Name { get; set; }
 
         public Guid TopicId { get; set; }
-
-        public Guid Id { get; set; }
     }
 }

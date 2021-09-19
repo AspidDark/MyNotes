@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyNotes.DataAccess.Services
 {
-    public class BaseService<T> where T : BaseNoteEntity
+    public class BaseService<T> where T : BaseEntity
     {
         private readonly AppDbContext _appDbContext;
 

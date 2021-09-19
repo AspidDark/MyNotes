@@ -3,7 +3,7 @@ using System;
 
 namespace MyNotes.Domain.Entities.Rights
 {
-    public class GlobalRight : BaseNoteEntity
+    public class GlobalRight : BaseEntity
     {
         public Guid UserId { get; set; }
 

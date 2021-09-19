@@ -35,7 +35,7 @@ namespace MyNotes.Controllers
         }
 
         [HttpGet(ApiRoutes.ParagraphRoute.GetList)]
-        public async Task<IActionResult> GetAll([FromQuery] PaginationQuery paginationQuery, [FromQuery] Guid topicId)
+        public async Task<IActionResult> GetList([FromQuery] PaginationQuery paginationQuery, [FromQuery] Guid topicId)
         {
             ByEntityFilter userIdFilter = new()
             {

@@ -2,7 +2,7 @@
 
 namespace MyNotes.Domain.Entities
 {
-    public class BaseNoteEntity
+    public class BaseEntity
     {
         public Guid Id { get; set; }
         /// <summary>
