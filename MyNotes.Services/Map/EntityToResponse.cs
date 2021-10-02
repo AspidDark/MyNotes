@@ -15,6 +15,8 @@ namespace MyNotes.Services.Map
             CreateMap<Note, NoteDto>();
 
             CreateMap<FileEntity, FileEntityResponseDto>();
+
+            CreateMap<TopicDto, StartingPageDto>();
         }
     }
 }

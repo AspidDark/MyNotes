@@ -73,5 +73,10 @@
 
             public const string Delete = Base + baseRoute + "/{fileId}";
         }
+
+        public static class StartingPageRoute
+        {
+            public const string Get = Base+"/startingPage";
+        }
     }
 }

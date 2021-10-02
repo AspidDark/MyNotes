@@ -23,6 +23,8 @@ namespace MyNotes.Services
             services.AddScoped<IParagraphLogic, ParagraphLogic>();
             services.AddScoped<INoteLogic, NoteLogic>();
             services.AddScoped<IFileLogic, FileLogic>();
+            services.AddScoped<IStartingPageLogic, StartingPageLogic>();
+
             return services;
         }
     }
