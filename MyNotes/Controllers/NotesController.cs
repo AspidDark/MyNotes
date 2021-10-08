@@ -14,12 +14,12 @@ namespace MyNotes.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class NotesController : ControllerBase
+    public class NoteController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly INoteLogic _noteLogic;
 
-        public NotesController(IMapper mapper, INoteLogic noteLogic)
+        public NoteController(IMapper mapper, INoteLogic noteLogic)
         {
             _mapper = mapper;
             _noteLogic = noteLogic;
