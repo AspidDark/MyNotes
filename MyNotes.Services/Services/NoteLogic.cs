@@ -100,6 +100,11 @@ namespace MyNotes.Services.Services
                     paginationFilter.PageSize,
                     paginationFilter.PageSize * paginationFilter.PageNumber);
 
+                if (result.Count == 0)
+                {
+                    return ErrorHelper.ErrorResult(Messages.noNote);
+                }
+
                 var responseBody = _mapper.Map<List<NoteDto>>(result);
 
                 return new Response<List<NoteDto>>(responseBody) { Result = true };
