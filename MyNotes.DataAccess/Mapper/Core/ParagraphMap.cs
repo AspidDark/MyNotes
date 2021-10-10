@@ -15,6 +15,7 @@ namespace MyNotes.DataAccess.Mapper.Core
 
             builder.Property(x => x.TopicId).HasColumnName("topic_id").IsRequired();
             builder.HasOne<Topic>(c => c.Topic).WithMany().HasForeignKey(x => x.TopicId);
+            builder.Property(x => x.Message).HasColumnName("message").HasMaxLength(5000);
         }
     }
 }

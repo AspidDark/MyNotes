@@ -162,6 +162,7 @@ namespace MyNotes.Services.Services
                     return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
                 paragraph.Name = entity.Name;
+                paragraph.Message = entity.Message;
 
                 var upateResult = await _paragraphContract.Update(paragraph);
                 return new Response<Paragraph>(upateResult) { Result = true };

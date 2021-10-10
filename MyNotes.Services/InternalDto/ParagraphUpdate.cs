@@ -12,5 +12,6 @@ namespace MyNotes.Services.InternalDto
         public string Name { get; set; }
 
         public Guid ParagraphId { get; set; }
+        public string Message { get; set; }
     }
 }
