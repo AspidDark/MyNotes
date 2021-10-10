@@ -162,11 +162,6 @@ namespace MyNotes.DataAccess.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("is_deleted");
 
-                    b.Property<string>("Message")
-                        .HasMaxLength(5000)
-                        .HasColumnType("character varying(5000)")
-                        .HasColumnName("message");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(300)

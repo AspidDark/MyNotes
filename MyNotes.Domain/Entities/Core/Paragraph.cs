@@ -14,12 +14,6 @@ namespace MyNotes.Domain.Entities.Core
         /// </summary>
         public Topic Topic { get; set; }
 
-        /// <summary>
-        /// Текст параграфа
-        /// </summary>
-        [MaxLength(5000)]
-        public string Message { get; set; }
-
         ///// <summary>
         ///// Теги
         ///// </summary>
