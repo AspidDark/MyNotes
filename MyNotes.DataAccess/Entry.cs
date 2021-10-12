@@ -14,11 +14,16 @@ namespace MyNotes.DataAccess
     {
         public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
-                    x => x.MigrationsAssembly("MyNotes.DataAccess"));
-            });
+            //services.AddDbContext<AppDbContext>(options =>
+            //{
+            //    options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
+            //        x => x.MigrationsAssembly("MyNotes.DataAccess"));
+            //});
+
+            //Inmemory  Microsoft.EntityFrameworkCore.InMemory
+            services.AddDbContext<AppDbContext>(opt =>
+               opt.UseInMemoryDatabase("InMem"));
+
 
             services.AddScoped<ICommentContract, CommentService>();
 

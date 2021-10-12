@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using MyNotes.DataAccess;
+using MyNotes.DataAccess.InMemoryDb;
 using MyNotes.HealthCheck;
 using MyNotes.Services;
 using RisGmp.Adapter.HealthCheck;
@@ -123,6 +124,9 @@ namespace MyNotes
             {
                 endpoints.MapControllers();
             });
+
+            //Inmemory
+            PrepDb.PrepPopulation(app, env.IsProduction());
         }
     }
 }
