@@ -9,6 +9,8 @@ namespace MyNotes.Services.InternalDto
         /// </summary>
         public Guid UserId { get; set; }
 
+        public string Name { get; set; }
+
         public string Message { get; set; }
 
         public Guid ParagraphId { get; set; }

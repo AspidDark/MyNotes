@@ -171,6 +171,7 @@ namespace MyNotes.Services.Services
                     return ErrorHelper.ErrorResult(Messages.noAccess);
                 }
                 note.Message = entity.Message;
+                note.Name = entity.Name;
 
                 var upateResult = await _noteContract.Update(note);
                 return new Response<Note>(upateResult) { Result = true };

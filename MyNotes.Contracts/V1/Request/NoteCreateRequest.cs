@@ -6,6 +6,8 @@ namespace MyNotes.Contracts.V1.Request
     {
         public string Message { get; set; }
 
+        public string Name { get; set; }
+
         public Guid ParagraphId { get; set; }
     }
 }

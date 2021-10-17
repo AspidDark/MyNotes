@@ -162,6 +162,7 @@ namespace MyNotes.DataAccess.InMemoryDb
                     OwnerId = user1Id,
                     Paragraph=paragraph1,
                     ParagraphId=paragraph1.Id,
+                    Name= "note1",
                     Message = "note1note1 note1note1 note1note1"
                 };
 
@@ -174,6 +175,7 @@ namespace MyNotes.DataAccess.InMemoryDb
                     OwnerId = user1Id,
                     Paragraph = paragraph1,
                     ParagraphId = paragraph1.Id,
+                    Name = "note2",
                     Message = "note2note2 note2note2 note2note2"
                 };
 
@@ -186,6 +188,7 @@ namespace MyNotes.DataAccess.InMemoryDb
                     OwnerId = user1Id,
                     Paragraph = paragraph1,
                     ParagraphId = paragraph1.Id,
+                    Name = "note3",
                     Message = "note3note2 note2note2 note2note3"
                 };
 
@@ -198,6 +201,7 @@ namespace MyNotes.DataAccess.InMemoryDb
                     OwnerId = user1Id,
                     Paragraph = paragraph1,
                     ParagraphId = paragraph1.Id,
+                    Name = "note4",
                     Message = "note4note2 note2note2 note2note4"
                 };
 
@@ -210,6 +214,7 @@ namespace MyNotes.DataAccess.InMemoryDb
                     OwnerId = user1Id,
                     Paragraph = paragraph2,
                     ParagraphId = paragraph2.Id,
+                    Name = "note5",
                     Message = "note5note2 note2note2 note2note4"
                 };
 
@@ -222,6 +227,7 @@ namespace MyNotes.DataAccess.InMemoryDb
                     OwnerId = user1Id,
                     Paragraph = paragraph2,
                     ParagraphId = paragraph2.Id,
+                    Name = "note6",
                     Message = "note6note2 note2note2 note2note6"
                 };
 
@@ -234,6 +240,7 @@ namespace MyNotes.DataAccess.InMemoryDb
                     OwnerId = user1Id,
                     Paragraph = paragraph3,
                     ParagraphId = paragraph3.Id,
+                    Name = "note7",
                     Message = "note7note2 note2note2 note2note7"
                 };
 
@@ -246,6 +253,7 @@ namespace MyNotes.DataAccess.InMemoryDb
                     OwnerId = user1Id,
                     Paragraph = paragraph3,
                     ParagraphId = paragraph3.Id,
+                    Name = "note8",
                     Message = "note8note2 note2note2 note2note8"
                 };
                 context.Notes.AddRange(note1, note2, note3, note4, note5, note6, note7, note8);
