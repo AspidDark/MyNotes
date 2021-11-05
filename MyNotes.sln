@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyNotes.Services", "MyNotes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyNotes.DataAccess", "MyNotes.DataAccess\MyNotes.DataAccess.csproj", "{4C8E5F22-6969-40B6-B2D7-1C834A325801}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNotes.Contracts", "MyNotes.Contracts\MyNotes.Contracts.csproj", "{D9C49FDB-BD43-4B96-AD7D-57823F81C702}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyNotes.Contracts", "MyNotes.Contracts\MyNotes.Contracts.csproj", "{D9C49FDB-BD43-4B96-AD7D-57823F81C702}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNotes.IdentityDb", "MyNotes.IdentityDb\MyNotes.IdentityDb.csproj", "{7FB16DCC-D269-4DB9-8F70-B48F33DAF320}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{D9C49FDB-BD43-4B96-AD7D-57823F81C702}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9C49FDB-BD43-4B96-AD7D-57823F81C702}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9C49FDB-BD43-4B96-AD7D-57823F81C702}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FB16DCC-D269-4DB9-8F70-B48F33DAF320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FB16DCC-D269-4DB9-8F70-B48F33DAF320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FB16DCC-D269-4DB9-8F70-B48F33DAF320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FB16DCC-D269-4DB9-8F70-B48F33DAF320}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
