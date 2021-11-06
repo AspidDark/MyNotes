@@ -7,9 +7,11 @@ import { Counter } from './components/Counter';
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
 import { ApplicationPaths } from './components/api-authorization/ApiAuthorizationConstants';
+import Main from './Main'
 
 import './custom.css'
 
+//        <Route path='/main' Component={Main} />
 export default class App extends Component {
   static displayName = App.name;
 

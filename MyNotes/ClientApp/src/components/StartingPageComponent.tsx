@@ -9,7 +9,7 @@ import {
     Text, 
     Link 
   } from "@chakra-ui/react";
-import { ChangeEvent, ReactComponentElement, SyntheticEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, ReactComponentElement, SyntheticEvent, useEffect, useState } from 'react'
 import TopicApi from '../Apis/topicApi'
 import {StartingPageDto} from '../Dto/startingPageDto'
 import StartingPageApi from '../Apis/startingPageApi'

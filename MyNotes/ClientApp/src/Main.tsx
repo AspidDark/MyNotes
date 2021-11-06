@@ -7,15 +7,15 @@ import { ChakraProvider, SimpleGrid, Textarea,  Accordion,
     GridItem,
     Box, Text} from '@chakra-ui/react' 
 
-import FileUpload from './Components/FileUpload'
-import FileDownload from './Components/FileDownload'
-import TopicComponent from './Components/TopicComponent'
-import ParagraphComponent from './Components/ParagraphComponent'
-import TopicList from './Components/StartingPageComponent'
+//import FileUpload from './Components/FileUpload'
+//import FileDownload from './Components/FileDownload'
+//import TopicComponent from './Components/TopicComponent'
+//import ParagraphComponent from './Components/ParagraphComponent'
+import TopicList from './components/StartingPageComponent'
 import { topicId } from './Consts/TempConsts'
-import TempAAA from './Components/AAATempComponent'
-import  DataFunction from './Components/InternalTypes/MainWindowTextData'
-import { useState } from 'react'
+//import TempAAA from './Components/AAATempComponent'
+//import  DataFunction from './Components/InternalTypes/MainWindowTextData'
+import React, { useState } from 'react';
 import { NoteDto } from "./Dto/NotesDtos";
 
 function Main() {
