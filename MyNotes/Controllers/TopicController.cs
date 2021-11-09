@@ -8,9 +8,11 @@ using AutoMapper;
 using MyNotes.Services.InternalDto;
 using MyNotes.Extensions;
 using MyNotes.Services.ServiceContracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyNotes.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class TopicController : ControllerBase

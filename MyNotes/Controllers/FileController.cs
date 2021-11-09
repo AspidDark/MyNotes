@@ -11,10 +11,12 @@ using MyNotes.Services.ServiceContracts;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using MyNotes.Contracts.V1.Response;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyNotes.Controllers
 {
     //[Route("api/file")]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class FileController : ControllerBase
