@@ -1,4 +1,4 @@
-export const basePath="https://localhost:44356/"
+export const basePath ="https://localhost:5001/"
 
 export const filePath="File/api/v1/file";
 
