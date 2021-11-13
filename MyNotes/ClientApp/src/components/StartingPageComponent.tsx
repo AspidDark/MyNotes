@@ -21,7 +21,6 @@ import {PaginatonWithMainEntity} from '../Dto/Pagination';
 import DataFunction from './InternalTypes/MainWindowTextData'
 
 
-
 function TopicList(dataFunc:DataFunction){
   
   const [data, setData]=useState<JSX.Element[]>();

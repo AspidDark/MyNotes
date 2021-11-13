@@ -30,19 +30,7 @@ namespace MyNotes.Controllers
         [HttpGet(ApiRoutes.StartingPageRoute.Get)]
         public async Task<IActionResult> Get()
         {
-            var claims = User.Claims.ToList();
-            var user = User;
-
-            var ttt = User.Identity;
-
-            var user1 = (HttpContext.User.Identity as ClaimsIdentity);
-
-            var identity = (ClaimsIdentity)User.Identity;
-            IEnumerable<Claim> claims2 = identity.Claims;
-
-
             string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-
             var response = await _startingPageLogic.Get(HttpContext.GetUserId());
             return Ok(response);
         }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import authService from '../components/api-authorization/AuthorizeService'
 
 export interface RequestData {
     url:string,
@@ -9,12 +10,22 @@ export interface ResponseData{
     success:boolean,
     data:any
 }
- 
+
 class CRUDRequestHelper{
     
-        async getRequest (request:string) : Promise<ResponseData>{
+        async getRequest (request:string, authorize:boolean = true) : Promise<ResponseData>{
             try{
-                const responseJson = await axios.get(request);
+                let headers = {};
+                if(authorize){
+                   headers=await this.getHeaders();
+                   if(!headers){
+                    return  this.errorObject();
+                   }
+                }
+
+                const responseJson = await axios.get(request, 
+                    authorize ? {headers:headers}:undefined);
+
                 if(!responseJson){
                     return  this.errorObject();
                 }
@@ -29,9 +40,18 @@ class CRUDRequestHelper{
             }
         }
 
-    async postRequest (request:RequestData) : Promise<ResponseData>{
+    async postRequest (request:RequestData, authorize:boolean = true) : Promise<ResponseData>{
         try{
-            const responseJson = await axios.post(request.url, request.data);
+            let headers = {};
+            if(authorize){
+               headers=await this.getHeaders();
+               if(!headers){
+                return  this.errorObject();
+               }
+            }
+
+            const responseJson = await axios.post(request.url, request.data,
+                authorize ? {headers:headers}:undefined);
             if(!responseJson){
                 return  this.errorObject();
             }
@@ -46,9 +66,18 @@ class CRUDRequestHelper{
         }
     }
 
-    async deleteRequest (request:string) : Promise<ResponseData>{
+    async deleteRequest (request:string, authorize:boolean = true) : Promise<ResponseData>{
         try{
-            const responseJson = await axios.delete(request);
+            let headers = {};
+            if(authorize){
+               headers=await this.getHeaders();
+               if(!headers){
+                return  this.errorObject();
+               }
+            }
+
+            const responseJson = await axios.delete(request, 
+                authorize ? {headers:headers}:undefined);
             if(!responseJson){
                 return  this.errorObject();
             }
@@ -63,9 +92,18 @@ class CRUDRequestHelper{
         }
     }
 
-    async updateRequest (request:RequestData) : Promise<ResponseData>{
+    async updateRequest (request:RequestData, authorize:boolean = true) : Promise<ResponseData>{
         try{
-            const responseJson = await axios.put(request.url, {name: request.data});
+            let headers = {};
+            if(authorize){
+               headers=await this.getHeaders();
+               if(!headers){
+                return  this.errorObject();
+               }
+            }
+
+            const responseJson = await axios.put(request.url, {name: request.data}, 
+                authorize ? {headers:headers}:undefined);
             if(!responseJson){
                 return  this.errorObject();
             }
@@ -86,5 +124,25 @@ class CRUDRequestHelper{
             data:message
         }
     }
+
+    async getToken(): Promise<string|null>{
+        const token = await authService.getAccessToken();
+        if(!token){
+            return null;
+        }
+        return `Bearer ${token}`;
+    }
+
+    async getHeaders():Promise<any>{
+        const token:string|null= await this.getToken();
+        if(!token){
+            return null;
+        }
+        const headers ={
+            'Authorization':token
+        }
+        return headers;
+    }
 }
+
 export default CRUDRequestHelper;
