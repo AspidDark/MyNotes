@@ -59,7 +59,7 @@ function TopicList(dataFunc:DataFunction){
 
 
     var okResult= dataResult.map((x:StartingPageDto)=> 
-      <AccordionItem>
+      <AccordionItem key={x.id}>
          <h2>
       <AccordionButton>
         <Box flex="0" textAlign="left" id={x.id}>
@@ -68,7 +68,7 @@ function TopicList(dataFunc:DataFunction){
         <AccordionIcon />
       </AccordionButton>
     </h2>
-      {x.paragraphs.map((y:ParagraphDto)=> <AccordionPanel onClick={e=> clicker(e, x.id, y.id)} pb={4} elementId={y.id}><Link> {y.name}</Link></AccordionPanel>)}
+      {x.paragraphs.map((y:ParagraphDto)=> <AccordionPanel onClick={e=> clicker(e, x.id, y.id)} pb={4} elementId={y.id} key={y.id} ><Link> {y.name}</Link></AccordionPanel>)}
      </AccordionItem> );
      setData(okResult);
     return okResult;
