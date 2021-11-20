@@ -50,6 +50,7 @@ namespace MyNotes.Controllers
         [HttpPost(ApiRoutes.TopicsRoute.Create)]
         public async Task<IActionResult> Create([FromBody] TopicCreateRequest request)
         {
+
             var topicCreate = _mapper.Map<TopicCreate>(request);
             topicCreate.UserId = HttpContext.GetUserId();
             var response = await _topicLogic.Create(topicCreate);
