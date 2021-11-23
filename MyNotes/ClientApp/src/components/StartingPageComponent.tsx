@@ -23,7 +23,7 @@ import {PaginatonWithMainEntity} from '../Dto/Pagination';
 import DataFunction from './InternalTypes/MainWindowTextData';
 import { AddTopicDto } from "../Dto/TopicDto";
 
-
+import { IconButton } from "@chakra-ui/react"
 
 function TopicList(dataFunc:DataFunction){
   
@@ -108,6 +108,16 @@ function TopicList(dataFunc:DataFunction){
         </Box>
         <AccordionIcon />
       </AccordionButton>
+      <IconButton 
+        aria-label="Edit Topic"
+        size="sm"
+        icon={<EditIcon />} 
+      />
+       <IconButton 
+        aria-label="Delete Topic"
+        size="sm"
+        icon={<DeleteIcon />} 
+      />
     </h2>
       {x.paragraphs.map((y:ParagraphDto)=> 
         <AccordionPanel onClick={e=> clicker(e, x.id, y.id)} pb={4} elementId={y.id} key={y.id} >
@@ -116,8 +126,6 @@ function TopicList(dataFunc:DataFunction){
         
         )}
      </AccordionItem> 
-      <DeleteIcon/>
-      <EditIcon/>
      </>);
      setData(okResult);
     return okResult;
@@ -125,7 +133,11 @@ function TopicList(dataFunc:DataFunction){
 
 
     return(<>
-      <AddIcon w={6} h={6} onClick={e=>AddIconClicked(e)} />
+      <IconButton 
+      aria-label="Add Topic"
+      size="sm"
+      icon={<AddIcon />} 
+      onClick={e=>AddIconClicked(e)} />
       <Accordion>{data}</Accordion>
       </>
     );
