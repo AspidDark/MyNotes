@@ -125,7 +125,7 @@ function TopicList(dataFunc:DataFunction){
   }
 
 
-   let editTopicClick = (event:any, entityId:string, upperFunction:any) =>{
+   let editTopicClick = (event:any, entityId:string) =>{
     let newData:JSX.Element[]=[];
     let tm=upperFunction;
     data?.forEach(x => {
@@ -165,7 +165,7 @@ function TopicList(dataFunc:DataFunction){
         aria-label="Edit Topic"
         size="sm"
         icon={<EditIcon />} 
-        onClick={e=> editTopicClick(e, x.id, this)}
+        onClick={e=> editTopicClick(e, x.id)}
       />
        <IconButton 
         aria-label="Delete Topic"
