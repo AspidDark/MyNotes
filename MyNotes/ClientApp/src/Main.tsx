@@ -18,25 +18,43 @@ import { topicId } from './Consts/TempConsts'
 import React, { useState } from 'react';
 import { NoteDto } from "./Dto/NotesDtos";
 
+import { IconButton } from "@chakra-ui/react"
+import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons'
+
 function Main() {
     const [data, setData]=useState<JSX.Element[]>();
 
     function ParametersChanged(data : NoteDto[]){
         let dataInfo:NoteDto[]=data;
 
-        var mapedResult=dataInfo.map((x:NoteDto)=> <div> 
+        var mapedResult=dataInfo.map((x:NoteDto)=> <> 
               <AccordionItem>
                 <h2>
              <AccordionButton>
-                <Box flex="0" textAlign="left" id={x.id}>
+                <Box flex="0" textAlign="right" id={x.id}>
                 {x.name}
                 </Box>
                 <AccordionIcon />
             </AccordionButton>
+            <IconButton 
+        aria-label="Edit Topic"
+        size="sm"
+        icon={<EditIcon />} 
+      />
+       <IconButton 
+        aria-label="Delete Topic"
+        size="sm"
+        icon={<DeleteIcon />} 
+      />
+       <IconButton 
+        aria-label="Edit Text"
+        size="sm"
+        icon={<EditIcon />} 
+      />
             </h2>
-                 <AccordionPanel  pb={4} elementId={x.id} paragrtaphId={x.paragraphId}>{x.message}</AccordionPanel>
+                 <AccordionPanel  pb={4} elementId={x.id} paragrtaphId={x.paragraphId}>{x.message} </AccordionPanel>
                  </AccordionItem>
-        </div>);
+        </>);
         setData(mapedResult);
     }
 

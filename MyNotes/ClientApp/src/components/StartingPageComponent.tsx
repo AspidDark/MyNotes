@@ -21,7 +21,7 @@ import NoteApi from "../Apis/notesApi";
 import { NoteDto } from "../Dto/NotesDtos";
 import {PaginatonWithMainEntity} from '../Dto/Pagination';
 import DataFunction from './InternalTypes/MainWindowTextData';
-import { AddTopicDto } from "../Dto/TopicDto";
+import { AddTopicDto, UpdateTopicDto} from "../Dto/TopicDto";
 
 import { IconButton } from "@chakra-ui/react"
 
@@ -29,15 +29,17 @@ function TopicList(dataFunc:DataFunction){
   
   const [data, setData]=useState<JSX.Element[]>();
   const [isLoaded, setLoaded]=useState(false);
-  const [isAddedElement, setIsAddedElement]=useState(false);
+  const [isRefreshNeeded, setIsRefreshNeeded]=useState(false);
   const [isAddClicked, setIsAddClicked]=useState(false);
- // const [newTopicName, setNewTopicName]=useState('');
+  const [newTopicName, setNewTopicName]=useState('');
 
+
+  //https://nainacodes.com/blog/create-an-accessible-and-reusable-react-modal
   useEffect(() => {
     renderListAsync();
-  }, [isAddedElement]);
+  }, [isRefreshNeeded]);
 
-  async function clicker(event:any, mainEntityId:string, entityId:string){
+  async function paragraphClicked(event:any, mainEntityId:string, entityId:string){
     const paginated : PaginatonWithMainEntity=
       {
         mainEntityId:entityId,
@@ -55,7 +57,6 @@ function TopicList(dataFunc:DataFunction){
   }
 
   async function CeateTopic(value:string) {
-    //setNewTopicName(value);
     if( value )
     {
       const requestService=new TopicApi();
@@ -70,8 +71,27 @@ function TopicList(dataFunc:DataFunction){
         let dataResult=result.data as AddEntityDto;
         let qqq2=66;
       }
-      setIsAddedElement(!isAddedElement); 
+      setIsRefreshNeeded(!isRefreshNeeded); 
       setIsAddClicked(false);
+  }
+
+  async function EditTopic(value:string, entityId:string) {
+    if( value )
+    {
+      const requestService=new TopicApi();
+      let updateDto:UpdateTopicDto={
+       name:value,
+       topicId:entityId
+     }
+      const result = await requestService.updateTopic(updateDto);
+          if(!result.result){
+              let qqq=55;
+              return;
+          }
+        let dataResult=result.data as AddEntityDto;
+        let qqq2=66;
+      }
+      setIsRefreshNeeded(!isRefreshNeeded); 
   }
 
   async function AddIconClicked(event:any) {
@@ -83,8 +103,42 @@ function TopicList(dataFunc:DataFunction){
     setData([SetInput(),...data as JSX.Element[]]);
   }
 
+  async function deleteTopicClick(event:any, entityId:string) {
+    //Модалку подтверждалку
+    const requestService=new TopicApi();
+    const result = await requestService.deleteTopic(entityId);
+          if(!result.result){
+              let qqq=55;
+              return;
+          }
+        let dataResult=result.data as string;
+        let qqq2=66;
+    setIsRefreshNeeded(!isRefreshNeeded); 
+  }
+
   function SetInput():JSX.Element {
-    return ( <Input placeholder="small size" size="sm" /*onChange={e=>setNewTopicName(e.target.value)}*/ onBlur={e=>CeateTopic(e.target.value)}/>);
+    return ( <Input placeholder="small size" size="sm" onBlur={e=>CeateTopic(e.target.value)}/>);
+  }
+
+  function CreateInputField(entityId:string):JSX.Element {
+    return ( <Input placeholder="small size" size="sm" onBlur={e=>EditTopic(e.target.value, entityId)}/>);
+  }
+
+
+   let editTopicClick = (event:any, entityId:string, upperFunction:any) =>{
+    let newData:JSX.Element[]=[];
+    let tm=upperFunction;
+    data?.forEach(x => {
+      if(x.props.children.key!=entityId){
+        newData.push(x);
+      }
+      else{
+        newData.push(CreateInputField(x.props.children.key))
+      }
+    });
+    if(newData.length>0){
+      setData(newData);
+    }
   }
 
   async function renderListAsync() {
@@ -96,7 +150,6 @@ function TopicList(dataFunc:DataFunction){
     }
     let dataResult=result.data as StartingPageDto[];
     setLoaded(true);
-
 
     var okResult= dataResult.map((x:StartingPageDto)=> 
     <>
@@ -112,25 +165,24 @@ function TopicList(dataFunc:DataFunction){
         aria-label="Edit Topic"
         size="sm"
         icon={<EditIcon />} 
+        onClick={e=> editTopicClick(e, x.id, this)}
       />
        <IconButton 
         aria-label="Delete Topic"
         size="sm"
         icon={<DeleteIcon />} 
+        onClick={e=> deleteTopicClick(e, x.id)}
       />
     </h2>
       {x.paragraphs.map((y:ParagraphDto)=> 
-        <AccordionPanel onClick={e=> clicker(e, x.id, y.id)} pb={4} elementId={y.id} key={y.id} >
+        <AccordionPanel onClick={e=> paragraphClicked(e, x.id, y.id)} pb={4} elementId={y.id} key={y.id} >
           <Link> {y.name}</Link>
         </AccordionPanel>
-        
         )}
      </AccordionItem> 
      </>);
      setData(okResult);
-    return okResult;
   }
-
 
     return(<>
       <IconButton 
