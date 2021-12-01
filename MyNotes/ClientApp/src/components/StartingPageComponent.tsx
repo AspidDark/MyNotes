@@ -8,8 +8,21 @@ import {
     Textarea,
     Text, 
     Link,
-    Input 
+    Input, 
+    Button,
+    useDisclosure
   } from "@chakra-ui/react";
+
+  import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+  } from '@chakra-ui/react'
+
 import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons'
 import React, { ChangeEvent, ReactComponentElement, SyntheticEvent, useEffect, useState } from 'react'
 import TopicApi from '../Apis/topicApi'
@@ -25,12 +38,6 @@ import { AddTopicDto, UpdateTopicDto} from "../Dto/TopicDto";
 
 import { IconButton } from "@chakra-ui/react"
 
-import {BaseModal} from "../components/common/BaseModal"
-import { ConfirmationModal } from "../components/common/Modals/confirmation-modal"
-import { useModal } from "../components/common/useModal";
-
-
-
 function TopicList(dataFunc:DataFunction){
   
   const [data, setData]=useState<JSX.Element[]>();
@@ -40,8 +47,8 @@ function TopicList(dataFunc:DataFunction){
   const [newTopicName, setNewTopicName]=useState('');
   const [deleteTopicId, setDeleteTopicId] =useState('');
 
-  const { isShown, toggle } = useModal();
-  
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   //https://nainacodes.com/blog/create-an-accessible-and-reusable-react-modal
   useEffect(() => {
     renderListAsync();
@@ -105,8 +112,6 @@ function TopicList(dataFunc:DataFunction){
     setIsRefreshNeeded(!isRefreshNeeded); 
   }
   
-
-  
   async function AddIconClicked(event:any) {
     if(isAddClicked)
     {
@@ -118,11 +123,11 @@ function TopicList(dataFunc:DataFunction){
   
   async function deleteTopicClick(event:any, entityId:string) {
     setDeleteTopicId(entityId);
-    toggle();
-    //Модалку подтверждалку
+    onOpen();
   }
 
   async function onDeleteConfirm () {
+    onClose();
     const requestService=new TopicApi();
     const result = await requestService.deleteTopic(deleteTopicId);
           if(!result.result){
@@ -131,12 +136,12 @@ function TopicList(dataFunc:DataFunction){
           }
         let dataResult=result.data as string;
         let qqq2=66;
-    setIsRefreshNeeded(!isRefreshNeeded); 
-    toggle();
+    setIsRefreshNeeded(!isRefreshNeeded);
+
   }
   const onDeletCancel = ()=>{
     setDeleteTopicId('');
-    toggle();
+    onClose();
   }
 
 
@@ -147,7 +152,6 @@ function TopicList(dataFunc:DataFunction){
   function CreateInputField(entityId:string):JSX.Element {
     return ( <Input placeholder="small size" size="sm" onBlur={e=>EditTopic(e.target.value, entityId)}/>);
   }
-
 
    let editTopicClick = (event:any, entityId:string) =>{
     let newData:JSX.Element[]=[];
@@ -203,20 +207,6 @@ function TopicList(dataFunc:DataFunction){
         </AccordionPanel>
         )}
      </AccordionItem>
-        
-     <BaseModal
-        isShown={isShown}
-        hide={toggle}
-        headerText="Confirmation"
-        modalContent={
-          <ConfirmationModal
-            onConfirm={onDeleteConfirm}
-            onCancel={onDeletCancel}
-            message="Are you sure you want to delete element?"
-          />
-        }
-      />
-
      </>);
      setData(okResult);
   }
@@ -229,6 +219,24 @@ function TopicList(dataFunc:DataFunction){
       icon={<AddIcon />} 
       onClick={e=>AddIconClicked(e)} />
       <Accordion>{data}</Accordion>
+
+      <Modal isOpen={isOpen} onClose={onDeletCancel}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Delete Conformation</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            Topc will be deleted
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='red' mr={3} onClick={onDeleteConfirm}>
+              Ok
+            </Button>
+            <Button variant='ghost'  onClick={onDeletCancel}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       </>
     );
 }
