@@ -11,7 +11,7 @@ import {
   } from '@chakra-ui/react'
 import React from 'react'
 
-interface ConfirmationModalUsage{
+export interface ConfirmationModalUsage{
     isOpen:boolean;
     onOk:()=>void;
     onClose:()=>void;

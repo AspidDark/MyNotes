@@ -38,6 +38,8 @@ import { AddTopicDto, UpdateTopicDto} from "../Dto/TopicDto";
 
 import { IconButton } from "@chakra-ui/react"
 
+import {ConfirmationModal, ConfirmationModalUsage} from "../components/common/Modals/ConfirmationModal"
+
 function TopicList(dataFunc:DataFunction){
   
   const [data, setData]=useState<JSX.Element[]>();
@@ -220,23 +222,14 @@ function TopicList(dataFunc:DataFunction){
       onClick={e=>AddIconClicked(e)} />
       <Accordion>{data}</Accordion>
 
-      <Modal isOpen={isOpen} onClose={onDeletCancel}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Delete Conformation</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            Topc will be deleted
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme='red' mr={3} onClick={onDeleteConfirm}>
-              Ok
-            </Button>
-            <Button variant='ghost'  onClick={onDeletCancel}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ConfirmationModal 
+      isOpen={isOpen} 
+      onOk={onDeleteConfirm} 
+      onClose={onDeletCancel} 
+      header="Delete Conformation" 
+      body="Topc will be deleted" 
+      okMessage="Ok" 
+      cancelMessage="Cancel" />
       </>
     );
 }
