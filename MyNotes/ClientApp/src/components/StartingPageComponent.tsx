@@ -94,7 +94,6 @@ function TopicList(dataFunc:DataFunction){
   }
 
   //edit
-  
   async function EditTopic(value:string, entityId:string) {
     if( value )
     {
@@ -114,6 +113,7 @@ function TopicList(dataFunc:DataFunction){
     setIsRefreshNeeded(!isRefreshNeeded); 
   }
   
+  //AddTopic
   async function AddIconClicked(event:any) {
     if(isAddClicked)
     {
@@ -123,6 +123,11 @@ function TopicList(dataFunc:DataFunction){
     setData([SetInput(),...data as JSX.Element[]]);
   }
   
+  function SetInput():JSX.Element {
+    return ( <Input placeholder="small size" size="sm" onBlur={e=>CeateTopic(e.target.value)}/>);
+  }
+  
+  //delete
   async function deleteTopicClick(event:any, entityId:string) {
     setDeleteTopicId(entityId);
     onOpen();
@@ -147,9 +152,6 @@ function TopicList(dataFunc:DataFunction){
   }
 
 
-  function SetInput():JSX.Element {
-    return ( <Input placeholder="small size" size="sm" onBlur={e=>CeateTopic(e.target.value)}/>);
-  }
 
   function CreateInputField(entityId:string):JSX.Element {
     return ( <Input placeholder="small size" size="sm" onBlur={e=>EditTopic(e.target.value, entityId)}/>);
