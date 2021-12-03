@@ -39,6 +39,7 @@ function TopicList(dataFunc:DataFunction){
   const [isAddClicked, setIsAddClicked]=useState(false);
   const [newTopicName, setNewTopicName]=useState('');
   const [deleteTopicId, setDeleteTopicId] =useState('');
+  const [updateTopicId, setUpdateTopicId] =useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen:isUpdateOpen, onOpen:onUpdateOpen, onClose:onUpdateClose }  = useDisclosure();
@@ -98,6 +99,21 @@ function SetInput():JSX.Element {
   }
 
   //edit
+  let editTopicClick = (event:any, entityId:string, name:string) =>{
+    setUpdateTopicId(entityId);
+    onUpdateOpen();
+  }
+
+  async function onUpdateConfirm(newName:string) {
+    onUpdateClose();
+    await EditTopic(newName, updateTopicId);
+  }
+
+  const onUpdateCancel =()=>{
+    setUpdateTopicId('');
+    onUpdateClose();
+  }
+
   async function EditTopic(value:string, entityId:string) {
     if( value )
     {
@@ -116,8 +132,6 @@ function SetInput():JSX.Element {
     }
     setIsRefreshNeeded(!isRefreshNeeded); 
   }
-  
-  
   
   //delete
   async function deleteTopicClick(event:any, entityId:string) {
@@ -141,27 +155,6 @@ function SetInput():JSX.Element {
   const onDeletCancel = ()=>{
     setDeleteTopicId('');
     onClose();
-  }
-
-
-
-  function CreateInputField(entityId:string):JSX.Element {
-    return ( <Input placeholder="small size" size="sm" onBlur={e=>EditTopic(e.target.value, entityId)}/>);
-  }
-
-   let editTopicClick = (event:any, entityId:string) =>{
-    let newData:JSX.Element[]=[];
-    data?.forEach(x => {
-      if(x.props.children.key!=entityId){
-        newData.push(x);
-      }
-      else{
-        newData.push(CreateInputField(x.props.children.key))
-      }
-    });
-    if(newData.length>0){
-      setData(newData);
-    }
   }
 
   async function renderListAsync() {
@@ -188,7 +181,7 @@ function SetInput():JSX.Element {
         aria-label="Edit Topic"
         size="sm"
         icon={<EditIcon />} 
-        onClick={e=> editTopicClick(e, x.id)}
+        onClick={e=> editTopicClick(e, x.id, x.name)}
       />
        <IconButton 
         aria-label="Delete Topic"
@@ -227,12 +220,16 @@ function SetInput():JSX.Element {
 
       <ModalWithInput
       isOpen={isUpdateOpen}
-      
+      onOk={onUpdateConfirm}
+      onClose={onUpdateCancel}
+      header="Update Confirmation"
+      okMessage="Ok" 
+      cancelMessage="Cancel"
+      inputLabel="New Topic Name"
       />
 
       </>
     );
-    
 }
 
 export default TopicList;
