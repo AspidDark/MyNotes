@@ -13,16 +13,6 @@ import {
     useDisclosure
   } from "@chakra-ui/react";
 
-  import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-  } from '@chakra-ui/react'
-
 import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons'
 import React, { ChangeEvent, ReactComponentElement, SyntheticEvent, useEffect, useState } from 'react'
 import TopicApi from '../Apis/topicApi'
@@ -38,7 +28,8 @@ import { AddTopicDto, UpdateTopicDto} from "../Dto/TopicDto";
 
 import { IconButton } from "@chakra-ui/react"
 
-import {ConfirmationModal, ConfirmationModalUsage} from "../components/common/Modals/ConfirmationModal"
+import {ConfirmationModal} from "../components/common/Modals/ConfirmationModal";
+import {ModalWithInput} from "../components/common/Modals/ModalWithInput";
 
 function TopicList(dataFunc:DataFunction){
   
@@ -50,6 +41,7 @@ function TopicList(dataFunc:DataFunction){
   const [deleteTopicId, setDeleteTopicId] =useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen:isUpdateOpen, onOpen:onUpdateOpen, onClose:onUpdateClose }  = useDisclosure();
 
   //https://nainacodes.com/blog/create-an-accessible-and-reusable-react-modal
   useEffect(() => {
@@ -74,6 +66,18 @@ function TopicList(dataFunc:DataFunction){
   }
   
   //create
+  async function AddIconClicked(event:any) {
+   if(isAddClicked){
+      return;      
+    }
+  setIsAddClicked(true);
+  setData([SetInput(),...data as JSX.Element[]]);
+}
+
+function SetInput():JSX.Element {
+  return ( <Input placeholder="small size" size="sm" onBlur={e=>CeateTopic(e.target.value)}/>);
+}
+
   async function CeateTopic(value:string) {
     if( value )
     {
@@ -113,19 +117,7 @@ function TopicList(dataFunc:DataFunction){
     setIsRefreshNeeded(!isRefreshNeeded); 
   }
   
-  //AddTopic
-  async function AddIconClicked(event:any) {
-    if(isAddClicked)
-    {
-      return;      
-    }
-    setIsAddClicked(true);
-    setData([SetInput(),...data as JSX.Element[]]);
-  }
   
-  function SetInput():JSX.Element {
-    return ( <Input placeholder="small size" size="sm" onBlur={e=>CeateTopic(e.target.value)}/>);
-  }
   
   //delete
   async function deleteTopicClick(event:any, entityId:string) {
@@ -232,8 +224,15 @@ function TopicList(dataFunc:DataFunction){
       body="Topc will be deleted" 
       okMessage="Ok" 
       cancelMessage="Cancel" />
+
+      <ModalWithInput
+      isOpen={isUpdateOpen}
+      
+      />
+
       </>
     );
+    
 }
 
 export default TopicList;
