@@ -9,6 +9,7 @@ using MyNotes.Services.InternalDto;
 using MyNotes.Services.ServiceContracts;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyNotes.Services.Services
@@ -105,7 +106,7 @@ namespace MyNotes.Services.Services
                     return ErrorHelper.ErrorResult(Messages.noNote);
                 }
 
-                var responseBody = _mapper.Map<List<NoteDto>>(result);
+                var responseBody = _mapper.Map<List<NoteDto>>(result).OrderByDescending(x => x.EditDate).ToList();
 
                 return new Response<List<NoteDto>>(responseBody) { Result = true };
             }

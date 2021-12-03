@@ -9,6 +9,7 @@ using MyNotes.Services.InternalDto;
 using MyNotes.Services.ServiceContracts;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyNotes.Services.Services
@@ -82,7 +83,7 @@ namespace MyNotes.Services.Services
                     paginationFilter.PageSize,
                     paginationFilter.PageSize * paginationFilter.PageNumber);
 
-                var responseBody = _mapper.Map<List<TopicDto>>(result);
+                var responseBody = _mapper.Map<List<TopicDto>>(result).OrderByDescending(x=>x.EditDate).ToList();
 
                 return new Response<List<TopicDto>>(responseBody) { Result = true };
             }
