@@ -30,23 +30,24 @@ import { IconButton } from "@chakra-ui/react"
 
 import {ConfirmationModal} from "../components/common/Modals/ConfirmationModal";
 import {ModalWithInput} from "../components/common/Modals/ModalWithInput";
+import { forEach } from "lodash";
 
 function TopicList(dataFunc:DataFunction){
   
   const [data, setData]=useState<JSX.Element[]>();
+  const [newParagraph, setNewParagraph]=useState<ParagraphShower[]>();
+
   const [isLoaded, setLoaded]=useState(false);
   const [isRefreshNeeded, setIsRefreshNeeded]=useState(false);
   const [isAddClicked, setIsAddClicked]=useState(false);
-  const [newTopicName, setNewTopicName]=useState('');
   const [deleteTopicId, setDeleteTopicId] =useState('');
   const [updateTopicId, setUpdateTopicId] =useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen:isUpdateOpen, onOpen:onUpdateOpen, onClose:onUpdateClose }  = useDisclosure();
 
-  //https://nainacodes.com/blog/create-an-accessible-and-reusable-react-modal
   useEffect(() => {
-    renderListAsync();
+    renderListAsync(setNewParagraph);
   }, [isRefreshNeeded]);
   
   async function paragraphClicked(event:any, mainEntityId:string, entityId:string){
@@ -156,8 +157,46 @@ function SetInput():JSX.Element {
     setDeleteTopicId('');
     onClose();
   }
+//Add Paragraph
+async function addParagraphClick(event:any, 
+  topicId:string, 
+  paragaphSetter:(newParagraps:ParagraphShower[])=>void,
+  paragraphsIds:string[]
+   ) {
+  let newParagraps:ParagraphShower[]=[];
+  for(let i = 0; i<paragraphsIds.length; i++)
+  {
+    if(paragraphsIds[i]==topicId){
+      let showInput:ParagraphShower={
+        isShow:true,
+        topicId:topicId
+      };
+      newParagraps.push(showInput);
+      continue;
+    }
+    let showInput:ParagraphShower={
+      isShow:false,
+      topicId:paragraphsIds[i]
+    };
+    newParagraps.push(showInput);
+  }
+  paragaphSetter(newParagraps);
+  setIsRefreshNeeded(!isRefreshNeeded);
+}
 
-  async function renderListAsync() {
+const isAddingNewParagraph=( topicId:string, paragraps?:ParagraphShower[]): boolean => {
+  if(!paragraps){
+    return false;
+  }
+  for(let i = 0; i<paragraps.length; i++){
+      if(paragraps[i].topicId==topicId){
+        return true;
+      }
+  }
+  return false;
+}
+
+  async function renderListAsync(paragaphSetter:(newParagraps:ParagraphShower[])=>void) {
     const requeatService=new StartingPageApi();
     const result = await requeatService.getStartingData();
     if(!result.result){
@@ -165,6 +204,8 @@ function SetInput():JSX.Element {
       return result.data as string;
     }
     let dataResult=result.data as StartingPageDto[];
+
+    let paragraphIds:string[]=dataResult.map(x=>x.id);
     setLoaded(true);
 
     var okResult= dataResult.map((x:StartingPageDto)=> 
@@ -189,7 +230,14 @@ function SetInput():JSX.Element {
         icon={<DeleteIcon />} 
         onClick={e=> deleteTopicClick(e, x.id)}
       />
+      <IconButton 
+        aria-label="Add Paragraph"
+        size="sm"
+        icon={<AddIcon />} 
+        onClick={e=> addParagraphClick(e, x.id, paragaphSetter, paragraphIds)}
+      />
     </h2>
+      <Input hidden={!isAddingNewParagraph(x.id, newParagraph)} />
       {x.paragraphs.map((y:ParagraphDto)=> 
         <AccordionPanel onClick={e=> paragraphClicked(e, x.id, y.id)} pb={4} elementId={y.id} key={y.id} >
           <Link> {y.name}</Link>
@@ -233,4 +281,9 @@ function SetInput():JSX.Element {
 }
 
 export default TopicList;
+
+interface ParagraphShower{
+  isShow:boolean,
+  topicId:string
+}
 // {x.paragraphs.map((y:ParagraphDto)=> <AccordionPanel pb={4}>{y.name}</AccordionPanel>)}
