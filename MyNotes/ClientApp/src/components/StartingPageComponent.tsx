@@ -190,11 +190,16 @@ const isAddingNewParagraph=( topicId:string, paragraps?:ParagraphShower[]): bool
   }
   for(let i = 0; i<paragraps.length; i++){
       if(paragraps[i].topicId==topicId){
-        return true;
+        return paragraps[i].isShow;
       }
   }
   return false;
 }
+
+async function CreateParagraph(name:string, topicId:string) {
+  
+}
+
 
   async function renderListAsync(paragaphSetter:(newParagraps:ParagraphShower[])=>void) {
     const requeatService=new StartingPageApi();
@@ -237,7 +242,7 @@ const isAddingNewParagraph=( topicId:string, paragraps?:ParagraphShower[]): bool
         onClick={e=> addParagraphClick(e, x.id, paragaphSetter, paragraphIds)}
       />
     </h2>
-      <Input hidden={!isAddingNewParagraph(x.id, newParagraph)} />
+      <Input hidden={!isAddingNewParagraph(x.id, newParagraph)} onBlur={e=>CreateParagraph(e.target.value, x.id)} />
       {x.paragraphs.map((y:ParagraphDto)=> 
         <AccordionPanel onClick={e=> paragraphClicked(e, x.id, y.id)} pb={4} elementId={y.id} key={y.id} >
           <Link> {y.name}</Link>
