@@ -21,6 +21,7 @@ import StartingPageApi from '../Apis/startingPageApi'
 import {AddEntityDto, BaseDto} from '../Dto/Dtos';
 import {ParagraphDto} from '../Dto/ParagraphDto'
 import NoteApi from "../Apis/notesApi";
+import ParagraphApi from "../Apis/paragraphApi";
 import { NoteDto } from "../Dto/NotesDtos";
 import {PaginatonWithMainEntity} from '../Dto/Pagination';
 import DataFunction from './InternalTypes/MainWindowTextData';
@@ -196,8 +197,33 @@ const isAddingNewParagraph=( topicId:string, paragraps?:ParagraphShower[]): bool
   return false;
 }
 
-async function CreateParagraph(name:string, topicId:string) {
-  
+async function CreateParagraph(e:any, name:string, topicId:string) {
+    e.target.value="";
+    const paragraphApi= new ParagraphApi();
+    const result = await paragraphApi.postParagraph({name, topicId});
+    if(!result.result){
+      let qqq=55;
+      return;
+    }
+    if(!newParagraph){
+      return;
+    }
+    hideAllParagrphInputs();
+    setIsRefreshNeeded(!isRefreshNeeded);
+}
+
+const hideAllParagrphInputs =()=>{
+  if(newParagraph){
+    let hidenParagraphs:ParagraphShower[]=[];
+    for(let i = 0; i<newParagraph.length; i++){
+      const hidenParagraph:ParagraphShower={
+        isShow:false,
+        topicId:newParagraph[i].topicId
+      }
+      hidenParagraphs.push(hidenParagraph)
+    }
+    setNewParagraph(hidenParagraphs);
+  } 
 }
 
 
@@ -242,7 +268,7 @@ async function CreateParagraph(name:string, topicId:string) {
         onClick={e=> addParagraphClick(e, x.id, paragaphSetter, paragraphIds)}
       />
     </h2>
-      <Input hidden={!isAddingNewParagraph(x.id, newParagraph)} onBlur={e=>CreateParagraph(e.target.value, x.id)} />
+      <Input hidden={!isAddingNewParagraph(x.id, newParagraph)} onBlur={e=>CreateParagraph(e, e.target.value, x.id)} />
       {x.paragraphs.map((y:ParagraphDto)=> 
         <AccordionPanel onClick={e=> paragraphClicked(e, x.id, y.id)} pb={4} elementId={y.id} key={y.id} >
           <Link> {y.name}</Link>
