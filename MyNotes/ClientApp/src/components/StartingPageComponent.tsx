@@ -62,7 +62,9 @@ function TopicList(dataFunc:DataFunction){
     const result = await noteApi.getNotes(paginated);
     
     if(!result.result){
-      console.log(result.data);
+      //Error hadle
+      let empty:NoteDto[]=[];
+      dataFunc.dataFunc(empty);
       return;
     }
     dataFunc.dataFunc(result.data as NoteDto[]);
