@@ -5,7 +5,7 @@ import { ChakraProvider, SimpleGrid, Textarea,  Accordion,
     AccordionIcon,
     Grid,
     GridItem,
-    Box, Text} from '@chakra-ui/react' 
+    Box, Text, Input} from '@chakra-ui/react' 
 
 //import FileUpload from './Components/FileUpload'
 //import FileDownload from './Components/FileDownload'
@@ -22,6 +22,7 @@ import { IconButton } from "@chakra-ui/react"
 import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons'
 
 import NotesArray from "./components/NotesArray";
+import NoteApi from './Apis/notesApi';
 
 
 function Main() {
@@ -55,9 +56,13 @@ function Main() {
 
     function AddNoteClicked(event:any){
         if(notes && notes.length>0){
-           
+            let api= new NoteApi();
+            setNotesContainer(<>
+                <Input placeholder="Note:" onBlur={e=>api.postNote({e.target.value as String, "","" })} />
+                
+               {NotesArray(notes) }
+               </>);
         }
-
     }
 
     return (
@@ -78,7 +83,6 @@ function Main() {
         </ChakraProvider>
     )
 }
-
 
 
 //<TopicList />
