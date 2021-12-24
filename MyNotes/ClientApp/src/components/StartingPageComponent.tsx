@@ -64,10 +64,10 @@ function TopicList(dataFunc:DataFunction){
     if(!result.result){
       //Error hadle
       let empty:NoteDto[]=[];
-      dataFunc.dataFunc(empty);
+      dataFunc.dataFunc(empty, entityId);
       return;
     }
-    dataFunc.dataFunc(result.data as NoteDto[]);
+    dataFunc.dataFunc(result.data as NoteDto[], entityId);
   }
   
   //create
