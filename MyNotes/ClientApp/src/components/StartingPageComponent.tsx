@@ -52,22 +52,7 @@ function TopicList(dataFunc:DataFunction){
   }, [isRefreshNeeded]);
   
   async function paragraphClicked(event:any, mainEntityId:string, entityId:string){
-    const paginated : PaginatonWithMainEntity=
-    {
-      mainEntityId:entityId,
-      pageNumber:0,
-      pageSize:20
-    }
-    const noteApi= new NoteApi();
-    const result = await noteApi.getNotes(paginated);
-    
-    if(!result.result){
-      //Error hadle
-      let empty:NoteDto[]=[];
-      dataFunc.dataFunc(empty, entityId);
-      return;
-    }
-    dataFunc.dataFunc(result.data as NoteDto[], entityId);
+    await dataFunc.dataFunc(entityId);
   }
   
   //create

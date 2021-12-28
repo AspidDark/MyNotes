@@ -28,12 +28,14 @@ import { PaginatonWithMainEntity } from './Dto/Pagination';
 
 function Main() {
     const [notesContainer, setNotesContainer]=useState<JSX.Element>();
-    const [notes, setNotes]=useState<NoteDto[]>();
+    //const [notes, setNotes]=useState<NoteDto[]>();
     const [isRefreshNeeded, setIsRefreshNeeded]=useState(false);
+    const [currentParagraph, setCurrentParagraph] = useState('');
 
     useEffect(() => {
-
+        ParametersChanged(currentParagraph);
       }, [isRefreshNeeded]);
+
 
     function addNote(e:any, paragraphId:string ) {
         let noteName:string = e.target.value;
@@ -45,15 +47,17 @@ function Main() {
 
         };
         api.postNote(noteToAdd);
-        //refresh
+        setIsRefreshNeeded(!currentParagraph);
     }
 
-    function ParametersChanged(data : NoteDto[], paragraphId:string){
-        let dataInfo:NoteDto[]=data;
+    async function ParametersChanged(paragraphId:string){
+        if(paragraphId===''){
+            return  (<Text fontSize='6xl'>Select Topic</Text>);
+        }
+        setCurrentParagraph(paragraphId);
+        let dataInfo:NoteDto[]|undefined=await getNotes(paragraphId);
 
         if(dataInfo&&dataInfo.length>0){
-            
-            setNotes(data);
             setNotesContainer(<>
             <IconButton 
              aria-label="Add Topic"
@@ -89,13 +93,30 @@ function Main() {
                     <Input placeholder="Note:" onBlur={e=>addNote(e, paragraphId)} />
                    {NotesArray(noteData) }
                    </>);
-            setIsRefreshNeeded(!isRefreshNeeded); 
+           // setIsRefreshNeeded(!isRefreshNeeded); 
                    return;
             }
         }
         setNotesContainer(<Input placeholder="Note:" onBlur={e=>addNote(e, paragraphId)} />);
-        setIsRefreshNeeded(!isRefreshNeeded); 
+        //setIsRefreshNeeded(!isRefreshNeeded); 
     }
+
+    async function getNotes(paragraphId:string):Promise<NoteDto[]|undefined> {
+        let api= new NoteApi();
+        const noteRequest:PaginatonWithMainEntity={
+            mainEntityId:paragraphId,
+            pageNumber:0,
+            pageSize:30
+        }
+        let notesResult = await api.getNotes(noteRequest);
+        if(notesResult && notesResult.result){
+            //setNotes(notesResult.data as NoteDto[]);
+            return notesResult.data as NoteDto[];
+        }
+        //setNotes(undefined);
+        return undefined;
+    }
+
 
     return (
         <ChakraProvider>
