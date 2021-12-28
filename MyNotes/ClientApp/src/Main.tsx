@@ -29,12 +29,13 @@ import { PaginatonWithMainEntity } from './Dto/Pagination';
 function Main() {
     const [notesContainer, setNotesContainer]=useState<JSX.Element>();
     //const [notes, setNotes]=useState<NoteDto[]>();
-    const [isRefreshNeeded, setIsRefreshNeeded]=useState(false);
+    //const [isRefreshNeeded, setIsRefreshNeeded]=useState(false);
+    const [refreshCount, setRefreshCount] = useState('');
     const [currentParagraph, setCurrentParagraph] = useState('');
 
     useEffect(() => {
         ParametersChanged(currentParagraph);
-      }, [isRefreshNeeded]);
+      }, [refreshCount]);
 
 
     function addNote(e:any, paragraphId:string ) {
@@ -47,12 +48,13 @@ function Main() {
 
         };
         api.postNote(noteToAdd);
-        setIsRefreshNeeded(!currentParagraph);
+        setRefreshCount(Guid.newGuid());
+       // setIsRefreshNeeded(!isRefreshNeeded);
     }
 
     async function ParametersChanged(paragraphId:string){
-        if(paragraphId===''){
-            return  (<Text fontSize='6xl'>Select Topic</Text>);
+        if(!paragraphId){
+            return  (<><Text fontSize='6xl'>Select Topic</Text></>);
         }
         setCurrentParagraph(paragraphId);
         let dataInfo:NoteDto[]|undefined=await getNotes(paragraphId);
@@ -116,7 +118,7 @@ function Main() {
         //setNotes(undefined);
         return undefined;
     }
-
+    
 
     return (
         <ChakraProvider>
@@ -136,6 +138,16 @@ function Main() {
         </ChakraProvider>
     )
 }
+
+class Guid {
+    static newGuid() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+          v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+  }
 
 
 //<TopicList />
