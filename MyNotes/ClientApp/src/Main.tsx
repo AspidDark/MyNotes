@@ -24,21 +24,20 @@ import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons'
 import NotesArray from "./components/NotesArray";
 import NoteApi from './Apis/notesApi';
 import { PaginatonWithMainEntity } from './Dto/Pagination';
+import { Guid } from './service/Guid';
 
 
 function Main() {
     const [notesContainer, setNotesContainer]=useState<JSX.Element>();
-    //const [notes, setNotes]=useState<NoteDto[]>();
-    //const [isRefreshNeeded, setIsRefreshNeeded]=useState(false);
-    const [refreshCount, setRefreshCount] = useState('');
+    const [refresh, setRefresh] = useState('');
     const [currentParagraph, setCurrentParagraph] = useState('');
 
     useEffect(() => {
         ParametersChanged(currentParagraph);
-      }, [refreshCount]);
+      }, [refresh]);
 
 
-    function addNote(e:any, paragraphId:string ) {
+    async function addNote(e:any, paragraphId:string ) {
         let noteName:string = e.target.value;
         let api= new NoteApi();
         let noteToAdd: AddNoteDto={
@@ -47,9 +46,8 @@ function Main() {
             paragraphId
 
         };
-        api.postNote(noteToAdd);
-        setRefreshCount(Guid.newGuid());
-       // setIsRefreshNeeded(!isRefreshNeeded);
+        await api.postNote(noteToAdd);
+        setRefresh(Guid.newGuid());
     }
 
     async function ParametersChanged(paragraphId:string){
@@ -92,15 +90,13 @@ function Main() {
             let noteData:NoteDto[]=notesResult.data  as NoteDto[];
             if(noteData && noteData.length>0){
                 setNotesContainer(<>
-                    <Input placeholder="Note:" onBlur={e=>addNote(e, paragraphId)} />
+                    <Input placeholder="Note:" onBlur={e=> addNote(e, paragraphId)} />
                    {NotesArray(noteData) }
                    </>);
-           // setIsRefreshNeeded(!isRefreshNeeded); 
                    return;
             }
         }
         setNotesContainer(<Input placeholder="Note:" onBlur={e=>addNote(e, paragraphId)} />);
-        //setIsRefreshNeeded(!isRefreshNeeded); 
     }
 
     async function getNotes(paragraphId:string):Promise<NoteDto[]|undefined> {
@@ -112,10 +108,8 @@ function Main() {
         }
         let notesResult = await api.getNotes(noteRequest);
         if(notesResult && notesResult.result){
-            //setNotes(notesResult.data as NoteDto[]);
             return notesResult.data as NoteDto[];
         }
-        //setNotes(undefined);
         return undefined;
     }
     
@@ -138,17 +132,6 @@ function Main() {
         </ChakraProvider>
     )
 }
-
-class Guid {
-    static newGuid() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0,
-          v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
-    }
-  }
-
 
 //<TopicList />
 
