@@ -1,17 +1,5 @@
-import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    Button,
-    FormControl,
-    FormLabel,
-    Input,
-  } from '@chakra-ui/react'
-import React,{useState} from 'react'
+import {Button, Input} from '@chakra-ui/react'
+import React from 'react'
 
 export interface NoteInputUsage{
     mainEntityId:string;
@@ -23,18 +11,15 @@ export interface NoteInputUsage{
     onClose:()=>void;
 }
 
-export function NoteInputComponent(data:NoteInputUsage){
-    const [currentHead, setCurrentHead]=useState('');
-    const [currentBody, setCurrentBody]=useState('');
-
-    setCurrentHead(data.headValue);
-    setCurrentBody(data.bodyValue);
+export function NoteInputComponent(usageData:NoteInputUsage):JSX.Element{
+    let currentHead:string=usageData.headValue;
+    let currentBody:string=usageData.bodyValue;
 
     return(<>
-        <Input placeholder={data.headPlaceholder} value={currentHead} onBlur={e=>setCurrentHead(e.target.value)} />
-        <Input placeholder={data.bodyPlaceholder} value={currentBody} onBlur={e=>setCurrentBody(e.target.value)} />
-        <Button colorScheme='green' onClick={()=>data.onOk(data.mainEntityId, currentHead, currentBody)}>Ok</Button>
-        <Button colorScheme='blue' onClick={data.onClose}>Cancel</Button>
+        <Input placeholder={usageData.headPlaceholder} onBlur={e=>currentHead=e.target.value} />
+        <Input placeholder={usageData.bodyPlaceholder} onBlur={e=>currentBody=e.target.value} />
+        <Button colorScheme='green' onClick={()=>usageData.onOk(usageData.mainEntityId, currentHead, currentBody)}>Ok</Button>
+        <Button colorScheme='blue' onClick={usageData.onClose}>Cancel</Button>
     </>);
 
 }

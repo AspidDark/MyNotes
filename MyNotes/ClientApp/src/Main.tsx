@@ -25,6 +25,7 @@ import NotesArray from "./components/NotesArray";
 import NoteApi from './Apis/notesApi';
 import { PaginatonWithMainEntity } from './Dto/Pagination';
 import { Guid } from './service/Guid';
+import {NoteInputComponent, NoteInputUsage} from './components/NoteInputComponent';
 
 
 function Main() {
@@ -36,19 +37,21 @@ function Main() {
         ParametersChanged(currentParagraph);
       }, [refresh]);
 
+    const refreshComponent =() =>setRefresh(Guid.newGuid());
 
-    async function addNote(e:any, paragraphId:string ) {
-        let noteName:string = e.target.value;
+    async function addNote(paragraphId:string, noteName:string, body:string ) {
         let api= new NoteApi();
         let noteToAdd: AddNoteDto={
             name:noteName,
-            message:"",
+            message:body,
             paragraphId
 
         };
         await api.postNote(noteToAdd);
-        setRefresh(Guid.newGuid());
+        refreshComponent();
     }
+
+    const cancelAddingNote =()=>setRefresh(Guid.newGuid());
 
     async function ParametersChanged(paragraphId:string){
         if(!paragraphId){
@@ -85,18 +88,31 @@ function Main() {
             pageSize:30
         }
         let notesResult = await api.getNotes(noteRequest);
+
+        let noteInputUsage:NoteInputUsage={
+            mainEntityId:paragraphId,
+            headPlaceholder:"Note Header",
+            headValue:"",
+            bodyPlaceholder:"Note Body",
+            bodyValue:"",
+            onOk:addNote,
+            onClose: cancelAddingNote
+        }
+
         if(notesResult && notesResult.result)
         {
             let noteData:NoteDto[]=notesResult.data  as NoteDto[];
             if(noteData && noteData.length>0){
+               
+
                 setNotesContainer(<>
-                    <Input placeholder="Note:" onBlur={e=> addNote(e, paragraphId)} />
+                    {NoteInputComponent(noteInputUsage)}
                    {NotesArray(noteData) }
                    </>);
                    return;
             }
         }
-        setNotesContainer(<Input placeholder="Note:" onBlur={e=>addNote(e, paragraphId)} />);
+        setNotesContainer(NoteInputComponent(noteInputUsage));
     }
 
     async function getNotes(paragraphId:string):Promise<NoteDto[]|undefined> {
