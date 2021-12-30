@@ -14,6 +14,7 @@ import {
 import React,{useState} from 'react'
 
 export interface NoteInputUsage{
+    mainEntityId:string;
     headPlaceholder:string;
     headValue:string;
     bodyPlaceholder:string;
@@ -32,8 +33,8 @@ export function NoteInputComponent(data:NoteInputUsage){
     return(<>
         <Input placeholder={data.headPlaceholder} value={currentHead} onBlur={e=>setCurrentHead(e.target.value)} />
         <Input placeholder={data.bodyPlaceholder} value={currentBody} onBlur={e=>setCurrentBody(e.target.value)} />
-        <Button>Ok</Button>
-        <Button>Cancel</Button>
+        <Button colorScheme='green' onClick={()=>data.onOk(data.mainEntityId, currentHead, currentBody)}>Ok</Button>
+        <Button colorScheme='blue' onClick={data.onClose}>Cancel</Button>
     </>);
 
 }
