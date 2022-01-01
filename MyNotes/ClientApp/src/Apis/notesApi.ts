@@ -92,7 +92,7 @@ class NoteApi{
     async updateNote(updateEntity:UpdateNoteDto):Promise<BaseDto<UpdateNoteDto>|BaseDto<string>>{
         const path=this.uri+`/${updateEntity.id}`;
         const apiService = new CRUDRequestHelper();
-        const resultApi = await apiService.updateRequest({url:path, data:updateEntity.message});
+        const resultApi = await apiService.updateRequest({url:path, data:updateEntity});
         if(!resultApi||!resultApi.success){
             let errorResult:BaseDto<string>={
                 result:false,

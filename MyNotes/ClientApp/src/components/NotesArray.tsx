@@ -9,7 +9,8 @@ import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons'
 
 import { NoteDto } from "../Dto/NotesDtos";
 
-function NotesArray(data : NoteDto[]):JSX.Element[]{
+function NotesArray(data : NoteDto[], updateNoteFunc:(x:NoteDto)=>void):JSX.Element[]{
+
     var mapedResult=data.map((x:NoteDto)=> <> 
                  <AccordionItem>
                    <h2>
@@ -23,16 +24,12 @@ function NotesArray(data : NoteDto[]):JSX.Element[]{
                 aria-label="Edit Topic"
                 size="sm"
                  icon={<EditIcon />} 
+                 onClick={e=>updateNoteFunc(x)}
                 />
                  <IconButton 
                  aria-label="Delete Topic"
                     size="sm"
                     icon={<DeleteIcon />} 
-                />
-                <IconButton 
-                 aria-label="Edit Text"
-                    size="sm"
-                 icon={<EditIcon />} 
                 />
                     </h2>
                  <AccordionPanel  pb={4} elementId={x.id} paragrtaphId={x.paragraphId}>{x.message} </AccordionPanel>

@@ -21,7 +21,7 @@ export interface ConfirmationModalWithInputUsage{
   okMessage:string;
   cancelMessage:string;
   inputLabel:string;
-  inputPlaceholder?:string
+  inputPlaceholder?:string;
 }
 
 //https://chakra-ui.com/docs/overlay/modal

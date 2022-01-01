@@ -5,6 +5,7 @@ import { ChakraProvider, SimpleGrid, Textarea,  Accordion,
     AccordionIcon,
     Grid,
     GridItem,
+    useDisclosure,
     Box, Text, Input} from '@chakra-ui/react' 
 
 //import FileUpload from './Components/FileUpload'
@@ -16,7 +17,7 @@ import { topicId } from './Consts/TempConsts'
 //import TempAAA from './Components/AAATempComponent'
 //import  DataFunction from './Components/InternalTypes/MainWindowTextData'
 import React, { useState, useEffect } from 'react';
-import { AddNoteDto, NoteDto } from "./Dto/NotesDtos";
+import { AddNoteDto, NoteDto, UpdateNoteDto } from "./Dto/NotesDtos";
 
 import { IconButton } from "@chakra-ui/react"
 import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons'
@@ -26,6 +27,7 @@ import NoteApi from './Apis/notesApi';
 import { PaginatonWithMainEntity } from './Dto/Pagination';
 import { Guid } from './service/Guid';
 import {NoteInputComponent, NoteInputUsage} from './components/NoteInputComponent';
+import { NoteUpdateModal } from './components/common/Modals/NodeUpdateModal';
 
 
 function Main() {
@@ -33,12 +35,39 @@ function Main() {
     const [refresh, setRefresh] = useState('');
     const [currentParagraph, setCurrentParagraph] = useState('');
 
+    const [currentNote, setCurrentNote]=useState<NoteDto>();
+    const {isOpen:isNoteUpdateModalOpen, onOpen: NodeUpdateOpen, onClose: NodeUpdateClose} = useDisclosure();
+
     useEffect(() => {
         ParametersChanged(currentParagraph);
       }, [refresh]);
 
     const refreshComponent =() =>setRefresh(Guid.newGuid());
+    
+//update
 
+    function updateNoteFunc(noteToUpdate:NoteDto){
+        setCurrentNote(noteToUpdate);
+        NodeUpdateOpen();
+    }
+
+    async function NoteUpdateConfirmed(enyityId:string, head:string, body:string){
+        let api= new NoteApi();
+        let updateNote: UpdateNoteDto={
+            id:enyityId,
+            name:head,
+            message:body
+        }
+        await api.updateNote(updateNote);
+        refreshComponent();
+    }
+
+    function NoteUpdateCanceled(){
+        NodeUpdateClose();
+    };
+
+
+//Add
     async function addNote(paragraphId:string, noteName:string, body:string ) {
         let api= new NoteApi();
         let noteToAdd: AddNoteDto={
@@ -52,6 +81,7 @@ function Main() {
     }
 
     const cancelAddingNote =()=>setRefresh(Guid.newGuid());
+
 
     async function ParametersChanged(paragraphId:string){
         if(!paragraphId){
@@ -67,7 +97,7 @@ function Main() {
              size="sm"
              icon={<AddIcon />} 
             onClick={e=>AddNoteClicked(e, paragraphId)} />
-            {NotesArray(dataInfo) }
+            {NotesArray(dataInfo, updateNoteFunc) }
             </>);
         return;
         }
@@ -103,11 +133,9 @@ function Main() {
         {
             let noteData:NoteDto[]=notesResult.data  as NoteDto[];
             if(noteData && noteData.length>0){
-               
-
                 setNotesContainer(<>
                     {NoteInputComponent(noteInputUsage)}
-                   {NotesArray(noteData) }
+                   {NotesArray(noteData, updateNoteFunc) }
                    </>);
                    return;
             }
@@ -141,6 +169,22 @@ function Main() {
             <GridItem colSpan={9} >
             <Box>
      <>
+        <NoteUpdateModal
+            isOpen={isNoteUpdateModalOpen}
+            entityId={currentNote?.id as string}
+            onOk={NoteUpdateConfirmed}
+            onClose={NoteUpdateCanceled}
+            header='Update Note'
+            okMessage='Ok'
+            cancelMessage='Cancel'
+            inputHeadLabel='Note Name'
+            inputHeadPlaceholder='Note Name Here'
+            inputHeadValue={currentNote?.name}
+            inputBodyLabel='Note Body'
+            inputBodyPlaceholder='Note Body Here'
+            inputBodyValue={currentNote?.message}
+        />
+
       <Accordion>{notesContainer}</Accordion>
       </></Box>
       </GridItem>

@@ -102,7 +102,7 @@ class CRUDRequestHelper{
                }
             }
 
-            const responseJson = await axios.put(request.url, {name: request.data}, 
+            const responseJson = await axios.put(request.url, request.data, 
                 authorize ? {headers:headers}:undefined);
             if(!responseJson){
                 return  this.errorObject();
