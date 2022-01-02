@@ -34,6 +34,25 @@ export function NoteUpdateModal(data: NoteUpdateModalUsage){
     let headValue:string|undefined=data.inputHeadValue;
     let bodyValue:string|undefined=data.inputBodyValue;
 
+
+
+    let updateIfChanged=(entityId:string,
+      oldHead:string|undefined,
+      newHead:string|undefined,
+      oldBody:string|undefined,
+      newBody:string|undefined,
+      onOk:(mainEnyityId:string, head:string, body:string)=>void,
+      onClose:()=>void
+      )=>{
+        if(oldHead===newHead&&oldBody===newBody){
+          onClose();
+          return;
+        }
+        onOk(entityId, newHead as string, newBody as string);
+    }
+
+
+
     return (
         <>
         <Modal isOpen={data.isOpen} onClose={data.onClose}>
@@ -51,7 +70,7 @@ export function NoteUpdateModal(data: NoteUpdateModalUsage){
               </ModalBody>
     
               <ModalFooter>
-                <Button colorScheme='blue' mr={3} onClick={e=> data.onOk(data.entityId, headValue as string, bodyValue as string)}>
+                <Button colorScheme='blue' mr={3} onClick={e=> updateIfChanged(data.entityId, data.inputHeadValue, headValue, data.inputBodyValue, bodyValue, data.onOk, data.onClose)}>
                   {data.okMessage}
                 </Button>
                 <Button variant='ghost' onClick={data.onClose}>{data.cancelMessage}</Button>
