@@ -52,6 +52,7 @@ function Main() {
     }
 
     async function NoteUpdateConfirmed(enyityId:string, head:string, body:string){
+        NodeUpdateClose();
         let api= new NoteApi();
         let updateNote: UpdateNoteDto={
             id:enyityId,

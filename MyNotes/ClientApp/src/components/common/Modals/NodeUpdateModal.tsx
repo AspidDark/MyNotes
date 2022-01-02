@@ -31,15 +31,8 @@ export interface NoteUpdateModalUsage{
 }
 
 export function NoteUpdateModal(data: NoteUpdateModalUsage){
-
-    const [headValue, setHeadValue] = useState(data?.inputHeadValue);
-
-    let bodyValue:string|undefined=data?.inputBodyValue;
-
-
-    function headChanged(e:any){
-      setHeadValue(e.target.value)
-    }
+    let headValue:string|undefined=data.inputHeadValue;
+    let bodyValue:string|undefined=data.inputBodyValue;
 
     return (
         <>
@@ -51,9 +44,9 @@ export function NoteUpdateModal(data: NoteUpdateModalUsage){
               <ModalBody pb={6}>
                 <FormControl mt={4}>
                   <FormLabel>{data.inputHeadLabel}</FormLabel>
-                  <Textarea placeholder={data.inputHeadPlaceholder} value={headValue} onChange={headChanged} />
+                  <Textarea placeholder={data.inputHeadPlaceholder} onChange={e=>headValue =e.target.value} onBlur={e=>headValue =e.target.value}>{data.inputHeadValue}</Textarea>
                   <FormLabel>{data.inputBodyLabel}</FormLabel>
-                  <Textarea placeholder={data.inputBodyPlaceholder} value={bodyValue} onChange={e=>bodyValue =e.target.value} onBlur={e=>bodyValue =e.target.value} />
+                  <Textarea placeholder={data.inputBodyPlaceholder} onChange={e=>bodyValue =e.target.value} onBlur={e=>bodyValue =e.target.value}>{data.inputBodyValue}</Textarea>
                 </FormControl>
               </ModalBody>
     
