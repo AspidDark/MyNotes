@@ -28,6 +28,7 @@ import { PaginatonWithMainEntity } from './Dto/Pagination';
 import { Guid } from './service/Guid';
 import {NoteInputComponent, NoteInputUsage} from './components/NoteInputComponent';
 import { NoteUpdateModal } from './components/common/Modals/NodeUpdateModal';
+import { ConfirmationModal } from './components/common/Modals/ConfirmationModal';
 
 
 function Main() {
@@ -37,13 +38,32 @@ function Main() {
 
     const [currentNote, setCurrentNote]=useState<NoteDto>();
     const {isOpen:isNoteUpdateModalOpen, onOpen: NodeUpdateOpen, onClose: NodeUpdateClose} = useDisclosure();
+    const {isOpen:isNoteDeleteModalOpen, onOpen: NodeDeleteOpen, onClose: NodeDeleteClose} = useDisclosure();
 
     useEffect(() => {
         ParametersChanged(currentParagraph);
       }, [refresh]);
 
     const refreshComponent =() =>setRefresh(Guid.newGuid());
-    
+
+//delete    
+    function deleteNote(noteToDelete:NoteDto){
+        setCurrentNote(noteToDelete);
+        NodeDeleteOpen();
+    }
+
+    async function onNoteDeleteConfirm(){
+        NodeDeleteClose();
+        let api= new NoteApi();
+        if(currentNote){
+            await api.deleteNote(currentNote.id);
+        }
+        refreshComponent();
+    }
+
+    function onNoteDeleteCancel(){
+        NodeDeleteClose();
+    }
 //update
 
     function updateNoteFunc(noteToUpdate:NoteDto){
@@ -98,7 +118,7 @@ function Main() {
              size="sm"
              icon={<AddIcon />} 
             onClick={e=>AddNoteClicked(e, paragraphId)} />
-            {NotesArray(dataInfo, updateNoteFunc) }
+            {NotesArray(dataInfo, updateNoteFunc, deleteNote) }
             </>);
         return;
         }
@@ -136,7 +156,7 @@ function Main() {
             if(noteData && noteData.length>0){
                 setNotesContainer(<>
                     {NoteInputComponent(noteInputUsage)}
-                   {NotesArray(noteData, updateNoteFunc) }
+                   {NotesArray(noteData, updateNoteFunc, deleteNote) }
                    </>);
                    return;
             }
@@ -185,6 +205,15 @@ function Main() {
             inputBodyPlaceholder='Note Body Here'
             inputBodyValue={currentNote?.message}
         />
+
+        <ConfirmationModal 
+        isOpen={isNoteDeleteModalOpen} 
+        onOk={onNoteDeleteConfirm} 
+        onClose={onNoteDeleteCancel} 
+        header="Delete Conformation" 
+        body="Note will be deleted" 
+        okMessage="Ok" 
+        cancelMessage="Cancel" />
 
       <Accordion>{notesContainer}</Accordion>
       </></Box>
