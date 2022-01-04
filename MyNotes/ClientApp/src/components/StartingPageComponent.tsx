@@ -32,6 +32,7 @@ import { IconButton } from "@chakra-ui/react"
 import {ConfirmationModal} from "../components/common/Modals/ConfirmationModal";
 import {ModalWithInput} from "../components/common/Modals/ModalWithInput";
 import { forEach } from "lodash";
+import ParagraphComponent, { ParagraphComponentUsage } from "./ParagraphComponent";
 
 function TopicList(dataFunc:DataFunction){
   
@@ -52,7 +53,7 @@ function TopicList(dataFunc:DataFunction){
     renderListAsync(setNewParagraph);
   }, [isRefreshNeeded]);
   
-  async function paragraphClicked(event:any, mainEntityId:string, entityId:string){
+  async function paragraphClicked(mainEntityId:string, entityId:string){
     await dataFunc.dataFunc(entityId);
   }
   
@@ -258,15 +259,24 @@ const hideAllParagrphInputs =()=>{
       />
     </h2>
       <Input hidden={!isAddingNewParagraph(x.id, newParagraph)} onBlur={e=>CreateParagraph(e, e.target.value, x.id)} />
-      {x.paragraphs.map((y:ParagraphDto)=> 
-        <AccordionPanel onClick={e=> paragraphClicked(e, x.id, y.id)} pb={4} elementId={y.id} key={y.id} >
-          <Link> {y.name}</Link>
-        </AccordionPanel>
-        )}
+      {x.paragraphs.map((y:ParagraphDto)=> {
+
+          const paragraphUsage:ParagraphComponentUsage={
+            mainEntityId: x.id,
+            elementId:y.id,
+            elementName:y.name,
+            onParagraphClick:paragraphClicked
+          }
+
+         return ParagraphComponent(paragraphUsage)})}
      </AccordionItem>
      </>);
      setData(okResult);
   }
+//        <AccordionPanel onClick={e=> paragraphClicked(x.id, y.id)} pb={4} elementId={y.id} key={y.id} >
+//<Link> {y.name}</Link>
+//</AccordionPanel>
+
 
     return(<>
 
