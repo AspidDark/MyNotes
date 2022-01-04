@@ -10,7 +10,8 @@ import {
     Link,
     Input, 
     Button,
-    useDisclosure
+    useDisclosure,
+    IconButton
   } from "@chakra-ui/react";
 
 import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons'
@@ -26,8 +27,6 @@ import { NoteDto } from "../Dto/NotesDtos";
 import {PaginatonWithMainEntity} from '../Dto/Pagination';
 import DataFunction from './InternalTypes/MainWindowTextData';
 import { AddTopicDto, UpdateTopicDto} from "../Dto/TopicDto";
-
-import { IconButton } from "@chakra-ui/react"
 
 import {ConfirmationModal} from "../components/common/Modals/ConfirmationModal";
 import {ModalWithInput} from "../components/common/Modals/ModalWithInput";
@@ -292,7 +291,7 @@ const hideAllParagrphInputs =()=>{
       onOk={onDeleteConfirm} 
       onClose={onDeletCancel} 
       header="Delete Conformation" 
-      body="Topc will be deleted" 
+      body="Topic will be deleted" 
       okMessage="Ok" 
       cancelMessage="Cancel" />
 
