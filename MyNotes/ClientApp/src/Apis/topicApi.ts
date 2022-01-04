@@ -92,7 +92,7 @@ class TopicApi{
     async updateTopic(updateTopic:UpdateTopicDto):Promise<BaseDto<TopicDto>|BaseDto<string>>{
         const path=this.uri+`/${updateTopic.topicId}`;
         const apiService = new CRUDRequestHelper();
-        const resultApi = await apiService.updateRequest({url:path, data:updateTopic.name});
+        const resultApi = await apiService.updateRequest({url:path, data:{name:updateTopic.name}});
         if(!resultApi||!resultApi.success){
             let errorResult:BaseDto<string>={
                 result:false,

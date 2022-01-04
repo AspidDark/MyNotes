@@ -9,7 +9,7 @@ import {
     Button,
     FormControl,
     FormLabel,
-    Input,
+    Textarea,
   } from '@chakra-ui/react'
 import React,{useState} from 'react'
 
@@ -22,6 +22,7 @@ export interface ConfirmationModalWithInputUsage{
   cancelMessage:string;
   inputLabel:string;
   inputPlaceholder?:string;
+  startingValue?:string;
 }
 
 //https://chakra-ui.com/docs/overlay/modal
@@ -38,7 +39,7 @@ export function ModalWithInput(data : ConfirmationModalWithInputUsage) {
             <ModalBody pb={6}>
               <FormControl mt={4}>
                 <FormLabel>{data.inputLabel}</FormLabel>
-                <Input placeholder={data.inputPlaceholder} onBlur={e=>setValue(e.target.value)} />
+                <Textarea placeholder={data.inputPlaceholder} onBlur={e=>setValue(e.target.value)}>{data?.startingValue}</Textarea>
               </FormControl>
             </ModalBody>
   

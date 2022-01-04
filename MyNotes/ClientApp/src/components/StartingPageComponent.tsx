@@ -43,6 +43,7 @@ function TopicList(dataFunc:DataFunction){
   const [isAddClicked, setIsAddClicked]=useState(false);
   const [deleteTopicId, setDeleteTopicId] =useState('');
   const [updateTopicId, setUpdateTopicId] =useState('');
+  const [selectedTopic, setSelectedTopic] = useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen:isUpdateOpen, onOpen:onUpdateOpen, onClose:onUpdateClose }  = useDisclosure();
@@ -90,6 +91,7 @@ function SetInput():JSX.Element {
   //edit
   let editTopicClick = (event:any, entityId:string, name:string) =>{
     setUpdateTopicId(entityId);
+    setSelectedTopic(name);
     onUpdateOpen();
   }
 
@@ -291,7 +293,8 @@ const hideAllParagrphInputs =()=>{
       header="Update Confirmation"
       okMessage="Ok" 
       cancelMessage="Cancel"
-      inputLabel="New Topic Name"
+      inputLabel="Topic Name"
+      startingValue={selectedTopic}
       />
 
       </>
