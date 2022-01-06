@@ -20,7 +20,7 @@ import TopicApi from '../Apis/topicApi'
 import {StartingPageDto} from '../Dto/startingPageDto'
 import StartingPageApi from '../Apis/startingPageApi'
 import {AddEntityDto, BaseDto} from '../Dto/Dtos';
-import {ParagraphDto} from '../Dto/ParagraphDto'
+import {ParagraphDto, UpdateParagraphDto} from '../Dto/ParagraphDto'
 import NoteApi from "../Apis/notesApi";
 import ParagraphApi from "../Apis/paragraphApi";
 import { NoteDto } from "../Dto/NotesDtos";
@@ -32,30 +32,92 @@ import {ConfirmationModal} from "../components/common/Modals/ConfirmationModal";
 import {ModalWithInput} from "../components/common/Modals/ModalWithInput";
 import { forEach } from "lodash";
 import ParagraphComponent, { ParagraphComponentUsage } from "./ParagraphComponent";
+import { Guid } from "../service/Guid";
 
 function TopicList(dataFunc:DataFunction){
   
   const [data, setData]=useState<JSX.Element[]>();
   const [newParagraph, setNewParagraph]=useState<ParagraphShower[]>();
+  const [refresh, setRefresh] = useState('');
 
   const [isLoaded, setLoaded]=useState(false);
-  const [isRefreshNeeded, setIsRefreshNeeded]=useState(false);
   const [isAddClicked, setIsAddClicked]=useState(false);
   const [deleteTopicId, setDeleteTopicId] =useState('');
   const [updateTopicId, setUpdateTopicId] =useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
 
+  const [selectedParagraph, setSelectedParagraph] = useState('');
+  const [selectedParagraphId, setSelectedParagraphId] = useState('');
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen:isUpdateOpen, onOpen:onUpdateOpen, onClose:onUpdateClose }  = useDisclosure();
 
+  const {isOpen:isParagraphUpdateOpen, onOpen:onParagraphUpdateOpen, onClose:onParagraphUpdateClose} = useDisclosure();
+  const {isOpen:isParagraphDeleteOpen, onOpen:onParagraphDeleteOpen, onClose:onParagraphDeleteClose} = useDisclosure();
+
   useEffect(() => {
     renderListAsync(setNewParagraph);
-  }, [isRefreshNeeded]);
+  }, [refresh]);
+
+  const RefreshComponent =( )=>setRefresh(Guid.newGuid())
   
   async function paragraphClicked(mainEntityId:string, entityId:string){
     await dataFunc.dataFunc(entityId);
   }
-  
+  //Paragraph Upadte
+  const ParagraphUpadte= (id:string, value:string)=>{
+    setSelectedParagraph(value);
+    setSelectedParagraphId(id);
+    onParagraphUpdateOpen();
+  }
+
+  const ParagraphUpdateConfirm = async(newValue:string)=>{
+    onParagraphUpdateClose();
+    const update:UpdateParagraphDto={
+      name:newValue,
+      id:selectedParagraphId
+    }
+
+    const requestService= new ParagraphApi();
+    const result = await requestService.updateParagraph(update);
+          if(!result.result){
+              let qqq=55;
+              return;
+          }
+        let dataResult=result.data as string;
+        let qqq2=66;
+      RefreshComponent();
+  }
+
+  const ParagraphUpdateCancel =()=>{
+    setSelectedParagraphId('');
+    onParagraphUpdateClose();
+  }
+
+  //Paragraph Delete
+  const ParagraphDelete= (id:string)=>{
+    setSelectedParagraphId(id);
+    onParagraphDeleteOpen();
+  } 
+
+  const ParagraphDeleteConfirm = async()=>{
+    onParagraphDeleteClose();
+    const requestService= new ParagraphApi();
+    const result = await requestService.deleteParagraph(selectedParagraphId);
+          if(!result.result){
+              let qqq=55;
+              return;
+          }
+        let dataResult=result.data as string;
+        let qqq2=66;
+        RefreshComponent();
+  }
+
+  const ParagraphDeleteCancel = ()=>{
+    setSelectedParagraphId('');
+    onParagraphDeleteClose();
+  }
+
   //create
   async function AddIconClicked(event:any) {
    if(isAddClicked){
@@ -84,7 +146,7 @@ function SetInput():JSX.Element {
       let dataResult=result.data as AddEntityDto;
       let qqq2=66;
     }
-    setIsRefreshNeeded(!isRefreshNeeded); 
+    RefreshComponent(); 
     setIsAddClicked(false);
   }
 
@@ -121,7 +183,7 @@ function SetInput():JSX.Element {
       let dataResult=result.data as AddEntityDto;
       let qqq2=66;
     }
-    setIsRefreshNeeded(!isRefreshNeeded); 
+    RefreshComponent(); 
   }
   
   //delete
@@ -140,7 +202,7 @@ function SetInput():JSX.Element {
           }
         let dataResult=result.data as string;
         let qqq2=66;
-    setIsRefreshNeeded(!isRefreshNeeded);
+        RefreshComponent();
 
   }
   const onDeletCancel = ()=>{
@@ -171,7 +233,7 @@ async function addParagraphClick(event:any,
     newParagraps.push(showInput);
   }
   paragaphSetter(newParagraps);
-  setIsRefreshNeeded(!isRefreshNeeded);
+  RefreshComponent();
 }
 
 const isAddingNewParagraph=( topicId:string, paragraps?:ParagraphShower[]): boolean => {
@@ -198,7 +260,7 @@ async function CreateParagraph(e:any, name:string, topicId:string) {
       return;
     }
     hideAllParagrphInputs();
-    setIsRefreshNeeded(!isRefreshNeeded);
+    RefreshComponent();
 }
 
 const hideAllParagrphInputs =()=>{
@@ -264,7 +326,9 @@ const hideAllParagrphInputs =()=>{
             mainEntityId: x.id,
             elementId:y.id,
             elementName:y.name,
-            onParagraphClick:paragraphClicked
+            onParagraphClick:paragraphClicked,
+            Update:ParagraphUpadte,
+            Delete:ParagraphDelete
           }
 
          return ParagraphComponent(paragraphUsage)})}
@@ -304,6 +368,26 @@ const hideAllParagrphInputs =()=>{
       cancelMessage="Cancel"
       inputLabel="Topic Name"
       startingValue={selectedTopic}
+      />
+
+      <ConfirmationModal 
+      isOpen={isParagraphDeleteOpen} 
+      onOk={ParagraphDeleteConfirm} 
+      onClose={ParagraphDeleteCancel} 
+      header="Delete Conformation" 
+      body="Paragraph will be deleted" 
+      okMessage="Ok" 
+      cancelMessage="Cancel" />
+
+      <ModalWithInput
+      isOpen={isParagraphUpdateOpen}
+      onOk={ParagraphUpdateConfirm}
+      onClose={ParagraphUpdateCancel}
+      header="Update Confirmation"
+      okMessage="Ok" 
+      cancelMessage="Cancel"
+      inputLabel="Paragraph Name"
+      startingValue={selectedParagraph}
       />
 
       </>

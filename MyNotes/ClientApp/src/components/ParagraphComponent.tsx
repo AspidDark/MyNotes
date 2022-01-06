@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { AccordionPanel, Link, IconButton } from "@chakra-ui/react";
-import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons'
-import ParagraphApi from '../Apis/paragraphApi';
-import { ConfirmationModal } from './common/Modals/ConfirmationModal';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
 
   export interface ParagraphComponentUsage{
     mainEntityId:string;
     elementId:string;
     elementName:string;
     onParagraphClick:(mainEntityId:string, elementId:string)=>void;
+    Update:(id:string, value:string)=>void;
+    Delete:(id:string)=>void;
   }
 
   export default function ParagraphComponent(paragraphData:ParagraphComponentUsage):JSX.Element{
@@ -21,13 +21,13 @@ import { ConfirmationModal } from './common/Modals/ConfirmationModal';
         aria-label="Edit Paragraph"
         size="sm"
         icon={<EditIcon />} 
-       // onClick={e=> UpdateParagraph(elementId)}
+        onClick={e=> paragraphData.Update(elementId, elementName)}
       />
        <IconButton 
         aria-label="Delete Paragraph"
         size="sm"
         icon={<DeleteIcon />} 
-       // onClick={e=> DeleteParagraph(elementId)}
+        onClick={e=> paragraphData.Delete(elementId)}
       />
 
   

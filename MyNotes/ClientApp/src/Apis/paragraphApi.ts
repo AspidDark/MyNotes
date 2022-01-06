@@ -91,7 +91,7 @@ class ParagraphApi{
     async updateParagraph(updateEntity:UpdateParagraphDto):Promise<BaseDto<ParagraphDto>|BaseDto<string>>{
         const path=this.uri+`/${updateEntity.id}`;
         const apiService = new CRUDRequestHelper();
-        const resultApi = await apiService.updateRequest({url:path, data:updateEntity.name});
+        const resultApi = await apiService.updateRequest({url:path, data:{name:updateEntity.name}});
         if(!resultApi||!resultApi.success){
             let errorResult:BaseDto<string>={
                 result:false,
