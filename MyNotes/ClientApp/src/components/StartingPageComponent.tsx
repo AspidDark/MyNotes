@@ -110,6 +110,7 @@ function TopicList(dataFunc:DataFunction){
           }
         let dataResult=result.data as string;
         let qqq2=66;
+        await dataFunc.refreshFunc();
         RefreshComponent();
   }
 

@@ -46,6 +46,12 @@ function Main() {
 
     const refreshComponent =() =>setRefresh(Guid.newGuid());
 
+    const SetEmptyNoteContainer =():void=>{
+        setCurrentParagraph('');
+        setNotesContainer(<Text fontSize='6xl'>Select Paragraph</Text>)
+        refreshComponent();
+    }
+
 //delete    
     function deleteNote(noteToDelete:NoteDto){
         setCurrentNote(noteToDelete);
@@ -185,7 +191,7 @@ function Main() {
             templateRows="repeat(1, 1fr)"
             templateColumns="repeat(10, 1fr)">
                 <GridItem rowSpan={2} colSpan={1}>
-            <Box> <TopicList dataFunc={ParametersChanged} /> </Box>
+            <Box> <TopicList dataFunc={ParametersChanged} refreshFunc={SetEmptyNoteContainer} /> </Box>
             </GridItem>
             <GridItem colSpan={9} >
             <Box>
