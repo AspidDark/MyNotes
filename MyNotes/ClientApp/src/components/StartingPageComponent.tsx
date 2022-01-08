@@ -8,7 +8,10 @@ import {
     useDisclosure,
     IconButton,
     Grid,
-    GridItem
+    GridItem,
+    Wrap,
+    WrapItem,
+    AccordionPanel
   } from "@chakra-ui/react";
 import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons';
 
@@ -37,8 +40,7 @@ function TopicList(dataFunc:DataFunction){
 
   const [isLoaded, setLoaded]=useState(false);
   const [isAddClicked, setIsAddClicked]=useState(false);
-  const [deleteTopicId, setDeleteTopicId] =useState('');
-  const [updateTopicId, setUpdateTopicId] =useState('');
+  const [selectedTopicId, setSelectedTopicId] =useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
 
   const [selectedParagraph, setSelectedParagraph] = useState('');
@@ -148,18 +150,18 @@ function SetInput():JSX.Element {
 
   //edit
   let editTopicClick = (event:any, entityId:string, name:string) =>{
-    setUpdateTopicId(entityId);
+    setSelectedTopicId(entityId);
     setSelectedTopic(name);
     onUpdateOpen();
   }
 
   async function onUpdateConfirm(newName:string) {
     onUpdateClose();
-    await EditTopic(newName, updateTopicId);
+    await EditTopic(newName, selectedTopicId);
   }
 
   const onUpdateCancel =()=>{
-    setUpdateTopicId('');
+    setSelectedTopicId('');
     onUpdateClose();
   }
 
@@ -184,14 +186,14 @@ function SetInput():JSX.Element {
   
   //delete
   async function deleteTopicClick(event:any, entityId:string) {
-    setDeleteTopicId(entityId);
+    setSelectedTopicId(entityId);
     onOpen();
   }
 
   async function onDeleteConfirm () {
     onClose();
     const requestService=new TopicApi();
-    const result = await requestService.deleteTopic(deleteTopicId);
+    const result = await requestService.deleteTopic(selectedTopicId);
           if(!result.result){
               let qqq=55;
               return;
@@ -202,12 +204,11 @@ function SetInput():JSX.Element {
 
   }
   const onDeletCancel = ()=>{
-    setDeleteTopicId('');
+    setSelectedTopicId('');
     onClose();
   }
 //Add Paragraph
-async function addParagraphClick(event:any, 
-  topicId:string, 
+async function addParagraphClick(topicId:string, 
   paragaphSetter:(newParagraps:ParagraphShower[])=>void,
   paragraphsIds:string[]
    ) {
@@ -315,13 +316,19 @@ const hideAllParagrphInputs =()=>{
          />
         </GridItem>
     </Grid>
-      <IconButton 
-        aria-label="Add Paragraph"
-        size="sm"
-        icon={<AddIcon />} 
-        onClick={e=> addParagraphClick(e, x.id, paragaphSetter, paragraphIds)}
-      />
     </h2>
+    <AccordionPanel>
+    <Wrap spacing='30px' justify='center'>
+      <WrapItem>
+        <IconButton 
+          aria-label="Add Paragraph"
+          size="sm"
+          icon={<AddIcon />} 
+          onClick={e=> addParagraphClick(x.id, paragaphSetter, paragraphIds)}
+      />
+      </WrapItem>
+    </Wrap>
+    </AccordionPanel>
       <Input hidden={!isAddingNewParagraph(x.id, newParagraph)} onBlur={e=>CreateParagraph(e, e.target.value, x.id)} />
       {x.paragraphs.map((y:ParagraphDto)=> {
 

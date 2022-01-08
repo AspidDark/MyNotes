@@ -117,13 +117,11 @@ function Main() {
             setNotesContainer(<>
             <Wrap spacing='30px' justify='right'>
                 <WrapItem>
-                    <Center>
-                        <IconButton
-                            aria-label="Add Note"
-                            size="sm"
-                            icon={<AddIcon />} 
-                            onClick={e=>AddNoteClicked(e, paragraphId)} />
-                    </Center>
+                    <IconButton
+                        aria-label="Add Note"
+                        size="sm"
+                        icon={<AddIcon />} 
+                        onClick={e=>AddNoteClicked(e, paragraphId)} />
                 </WrapItem>
             </Wrap>
             {NotesArray(dataInfo, updateNoteFunc, deleteNote) }
@@ -131,11 +129,15 @@ function Main() {
         return;
         }
         setNotesContainer(<>
-         <IconButton 
-             aria-label="Add Note"
-             size="sm"
-             icon={<AddIcon />} 
-            onClick={e=>AddNoteClicked(e, paragraphId)} />
+        <Wrap spacing='30px' justify='right'>
+                <WrapItem>
+                    <IconButton
+                        aria-label="Add Note"
+                        size="sm"
+                        icon={<AddIcon />} 
+                        onClick={e=>AddNoteClicked(e, paragraphId)} />
+                </WrapItem>
+            </Wrap>
         <Text fontSize='6xl'>No Note</Text></>);
     }
 
@@ -230,12 +232,4 @@ function Main() {
         </ChakraProvider>
     )
 }
-
-//<TopicList />
-
-
-// <TopicComponent />
-//            <FileUpload />
-//<FileDownload />
-//<ParagraphComponent />
 export default Main
