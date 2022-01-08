@@ -2,35 +2,30 @@ import {
     Accordion,
     AccordionItem,
     AccordionButton,
-    AccordionPanel,
     AccordionIcon,
     Box,
-    Textarea,
-    Text, 
-    Link,
     Input, 
-    Button,
     useDisclosure,
-    IconButton
+    IconButton,
+    Grid,
+    GridItem
   } from "@chakra-ui/react";
+import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons';
 
-import { DeleteIcon, AddIcon, EditIcon } from '@chakra-ui/icons'
-import React, { ChangeEvent, ReactComponentElement, SyntheticEvent, useEffect, useState } from 'react'
-import TopicApi from '../Apis/topicApi'
-import {StartingPageDto} from '../Dto/startingPageDto'
-import StartingPageApi from '../Apis/startingPageApi'
-import {AddEntityDto, BaseDto} from '../Dto/Dtos';
-import {ParagraphDto, UpdateParagraphDto} from '../Dto/ParagraphDto'
-import NoteApi from "../Apis/notesApi";
+import React, { ChangeEvent, ReactComponentElement, SyntheticEvent, useEffect, useState } from 'react';
+import { forEach } from "lodash";
+
+import TopicApi from '../Apis/topicApi';
+import {StartingPageDto} from '../Dto/startingPageDto';
+import StartingPageApi from '../Apis/startingPageApi';
+import {AddEntityDto} from '../Dto/Dtos';
+import {ParagraphDto, UpdateParagraphDto} from '../Dto/ParagraphDto';
 import ParagraphApi from "../Apis/paragraphApi";
-import { NoteDto } from "../Dto/NotesDtos";
-import {PaginatonWithMainEntity} from '../Dto/Pagination';
 import DataFunction from './InternalTypes/MainWindowTextData';
 import { AddTopicDto, UpdateTopicDto} from "../Dto/TopicDto";
 
 import {ConfirmationModal} from "../components/common/Modals/ConfirmationModal";
 import {ModalWithInput} from "../components/common/Modals/ModalWithInput";
-import { forEach } from "lodash";
 import ParagraphComponent, { ParagraphComponentUsage } from "./ParagraphComponent";
 import { Guid } from "../service/Guid";
 
@@ -278,7 +273,6 @@ const hideAllParagrphInputs =()=>{
   } 
 }
 
-
   async function renderListAsync(paragaphSetter:(newParagraps:ParagraphShower[])=>void) {
     const requeatService=new StartingPageApi();
     const result = await requeatService.getStartingData();
@@ -294,25 +288,33 @@ const hideAllParagrphInputs =()=>{
     var okResult= dataResult.map((x:StartingPageDto)=> 
     <>
       <AccordionItem key={x.id}>
-         <h2>
-      <AccordionButton>
-        <Box flex="0" textAlign="left" id={x.id}>
-          {x.name}
-        </Box>
-        <AccordionIcon />
-      </AccordionButton>
-      <IconButton 
-        aria-label="Edit Topic"
-        size="sm"
-        icon={<EditIcon />} 
-        onClick={e=> editTopicClick(e, x.id, x.name)}
-      />
-       <IconButton 
-        aria-label="Delete Topic"
-        size="sm"
-        icon={<DeleteIcon />} 
-        onClick={e=> deleteTopicClick(e, x.id)}
-      />
+      <h2>
+      <Grid templateColumns='repeat(3, 1fr)' gap={2}>
+        <GridItem w='100%'>
+          <AccordionButton>
+            <Box flex="0" textAlign="left" id={x.id}>
+              {x.name}
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+        </GridItem>
+        <GridItem w='100%'>
+          <IconButton 
+            aria-label="Edit Topic"
+            size="sm"
+            icon={<EditIcon />} 
+            onClick={e=> editTopicClick(e, x.id, x.name)}
+          />
+        </GridItem>
+        <GridItem w='100%'>
+          <IconButton 
+            aria-label="Delete Topic"
+            size="sm"
+            icon={<DeleteIcon />} 
+           onClick={e=> deleteTopicClick(e, x.id)}
+         />
+        </GridItem>
+    </Grid>
       <IconButton 
         aria-label="Add Paragraph"
         size="sm"
@@ -337,10 +339,6 @@ const hideAllParagrphInputs =()=>{
      </>);
      setData(okResult);
   }
-//        <AccordionPanel onClick={e=> paragraphClicked(x.id, y.id)} pb={4} elementId={y.id} key={y.id} >
-//<Link> {y.name}</Link>
-//</AccordionPanel>
-
 
     return(<>
 
@@ -401,4 +399,3 @@ interface ParagraphShower{
   isShow:boolean,
   topicId:string
 }
-// {x.paragraphs.map((y:ParagraphDto)=> <AccordionPanel pb={4}>{y.name}</AccordionPanel>)}

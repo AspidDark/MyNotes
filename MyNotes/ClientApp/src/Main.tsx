@@ -1,12 +1,8 @@
-import { ChakraProvider, SimpleGrid, Textarea,  Accordion,
-    AccordionItem,
-    AccordionButton,
-    AccordionPanel,
-    AccordionIcon,
+import { ChakraProvider,  Accordion,
     Grid,
     GridItem,
     useDisclosure,
-    Box, Text, Input} from '@chakra-ui/react' 
+    Box, Text, Input, Wrap, WrapItem, Center} from '@chakra-ui/react' 
 
 //import FileUpload from './Components/FileUpload'
 //import FileDownload from './Components/FileDownload'
@@ -119,18 +115,24 @@ function Main() {
 
         if(dataInfo&&dataInfo.length>0){
             setNotesContainer(<>
-            <IconButton 
-             aria-label="Add Topic"
-             size="sm"
-             icon={<AddIcon />} 
-            onClick={e=>AddNoteClicked(e, paragraphId)} />
+            <Wrap spacing='30px' justify='right'>
+                <WrapItem>
+                    <Center>
+                        <IconButton
+                            aria-label="Add Note"
+                            size="sm"
+                            icon={<AddIcon />} 
+                            onClick={e=>AddNoteClicked(e, paragraphId)} />
+                    </Center>
+                </WrapItem>
+            </Wrap>
             {NotesArray(dataInfo, updateNoteFunc, deleteNote) }
             </>);
         return;
         }
         setNotesContainer(<>
          <IconButton 
-             aria-label="Add Topic"
+             aria-label="Add Note"
              size="sm"
              icon={<AddIcon />} 
             onClick={e=>AddNoteClicked(e, paragraphId)} />
