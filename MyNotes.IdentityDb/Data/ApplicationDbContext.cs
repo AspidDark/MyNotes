@@ -6,6 +6,9 @@ using MyNotes.Main.Models;
 
 namespace MyNotes.Main.Data
 {
+    //Add-Migration InitialPersistedGrantDbMigration -c ApplicationDbContext -o Data/Migrations
+    //https://purple.telstra.com/blog/asp-net-core-identity-with-postgresql
+
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
         public ApplicationDbContext(
