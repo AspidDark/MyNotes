@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,14 +20,28 @@ namespace MyNotes.IdentityDb
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            //Видимо дефолт надо убрать
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            //https://metanit.com/sharp/aspnet5/16.5.php
+            //+Mail try
+            //services.AddIdentity<IdentityUser, IdentityRole>(config => {
+            //    config.Password.RequiredLength = 4;
+            //    config.SignIn.RequireConfirmedEmail = true;
+            //}).AddEntityFrameworkStores<ApplicationDbContext>()
+            //.AddDefaultTokenProviders().AddClaimsPrincipalFactory<>();
+            //-Mail try
 
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(configuration);
+
 
             services.AddControllersWithViews();
             services.AddRazorPages();
