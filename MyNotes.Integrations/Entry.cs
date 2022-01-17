@@ -1,12 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MyNotes.Integrations.Mailer;
 using NETCore.MailKit.Extensions;
 using NETCore.MailKit.Infrastructure.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyNotes.Integrations
 {
@@ -22,6 +19,9 @@ namespace MyNotes.Integrations
             var mailKitOprions = configuration.GetSection("MailKitOptions").Get<MailKitOptions>();
 
             services.AddMailKit(config => config.UseMailKit(mailKitOprions));
+
+            services.AddTransient<IEmailSender, EmailSender>();
+
             return services;
         }
     }

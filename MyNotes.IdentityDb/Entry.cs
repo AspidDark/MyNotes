@@ -12,10 +12,6 @@ namespace MyNotes.IdentityDb
     {
         public static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //  options.UseSqlServer(
-            //      configuration.GetConnectionString("IdentityDb")));
-
             services.AddDbContext<ApplicationDbContext>(options =>  options.UseNpgsql(configuration.GetConnectionString("IdentityDb")));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
@@ -25,23 +21,19 @@ namespace MyNotes.IdentityDb
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             //https://metanit.com/sharp/aspnet5/16.5.php
-            //+Mail try
+            //+Settings change try
             //services.AddIdentity<IdentityUser, IdentityRole>(config => {
             //    config.Password.RequiredLength = 4;
             //    config.SignIn.RequireConfirmedEmail = true;
             //}).AddEntityFrameworkStores<ApplicationDbContext>()
             //.AddDefaultTokenProviders().AddClaimsPrincipalFactory<>();
-            //-Mail try
+            //-Settings change try
 
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
-
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.Configure<AuthMessageSenderOptions>(configuration);
-
 
             services.AddControllersWithViews();
             services.AddRazorPages();

@@ -14,5 +14,5 @@
 10.1 Topic Edit, Delete => inLine   Paragraph Add  ниже +
 10.2 paragraph Edit, delete inLine +
 10.3 Note Add Right corner  Edit delete Inline +
-11 Скрывать кнопку добавления при введении текста  Топик параграф Запись  a_1@aA.aaa
+11 Скрывать кнопку добавления при введении текста  Топик параграф Запись  a_1@BZB.aaa
 12 Панель администратора

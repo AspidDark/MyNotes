@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
+using MyNotes.Integrations;
 
 namespace MyNotes
 {
@@ -62,9 +63,11 @@ namespace MyNotes
 
             //services.AddCors();
 
-            //+Identity
+            //Identity
             services.AddIdentity(Configuration);
-            //-Identity
+
+            //Idaentity mail Remove in develop
+            services.AddIntegrations(Configuration);
 
             services.AddCors(options =>
             {

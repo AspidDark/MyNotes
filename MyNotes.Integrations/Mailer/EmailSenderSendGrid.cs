@@ -4,11 +4,11 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Threading.Tasks;
 
-namespace MyNotes.IdentityDb
+namespace MyNotes.IdentityDb.Mailer
 {
-    public class EmailSender : IEmailSender
+    public class EmailSenderSendGrid : IEmailSender
     {
-        public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor)
+        public EmailSenderSendGrid(IOptions<AuthMessageSenderOptions> optionsAccessor)
         {
             Options = optionsAccessor.Value;
         }

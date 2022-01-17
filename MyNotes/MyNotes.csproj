@@ -39,6 +39,7 @@
     <ProjectReference Include="..\MyNotes.Contracts\MyNotes.Contracts.csproj" />
     <ProjectReference Include="..\MyNotes.DataAccess\MyNotes.DataAccess.csproj" />
     <ProjectReference Include="..\MyNotes.IdentityDb\MyNotes.IdentityDb.csproj" />
+    <ProjectReference Include="..\MyNotes.Integrations\MyNotes.Integrations.csproj" />
     <ProjectReference Include="..\MyNotes.Services\MyNotes.Services.csproj" />
   </ItemGroup>
 
